@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
  */
 @Service(value = "AirlineRepo") //как задать имя спринг бину через аннотации
 public interface AirlineRepo extends PagingAndSortingRepository<Airline, Integer> {
+    Airline findByName(String name);
 }

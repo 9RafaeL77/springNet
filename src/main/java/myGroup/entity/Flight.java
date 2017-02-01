@@ -22,7 +22,7 @@ public class Flight {
     @Column(name = "flight_id")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private Airline airline;
 

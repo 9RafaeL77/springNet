@@ -62,7 +62,7 @@ public class Users {
         this.lastName = lastName;
     }
 
-    public boolean isAdmin() {
+    public Boolean isAdmin() {
         return admin;
     }
 

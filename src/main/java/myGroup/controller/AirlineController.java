@@ -1,10 +1,13 @@
 package myGroup.controller;
 
-import myGroup.resource.AirlineResource;
+
 import myGroup.entity.Airline;
 import myGroup.exception.NullValueOfArgumentException;
 import myGroup.interfaceRepo.AirlineRepo;
+import myGroup.resource.AirlineResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +24,11 @@ public class AirlineController {
     private AirlineRepo airlineRepo;
 
     @GetMapping("/getAirlineById")
-    public AirlineResource getAirlineById(Integer id, String name) throws NullValueOfArgumentException {
+    public ResponseEntity <AirlineResource> getAirlineById(Integer id, String name) throws NullValueOfArgumentException {
         if (id != null) {
             final Airline airline = airlineRepo.findOne(id);
             if (airline != null) {
-                return new AirlineResource(airline);
+                return ResponseEntity.status(HttpStatus.OK).body(new AirlineResource(airline));
             } else throw new NullValueOfArgumentException("Does not exist:", "id");
         } else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
@@ -64,8 +67,8 @@ public class AirlineController {
     }
 
     @GetMapping("/getAir")
-    public Airline getAirline() throws NullValueOfArgumentException {
-        final Airline airline = airlineRepo.findOne(1);
+    public Airline getAirline(String name) throws NullValueOfArgumentException {
+        final Airline airline = airlineRepo.findByName(name);
         return airline;
     }
 

@@ -1,24 +1,44 @@
-<html>
-<head><title>Login Page</title></head>
-<body onload='document.f.username.focus();'>
-<h3>Login with Username and Password</h3>
-<form name='f' action='/login' method='POST'>
-    <table>
-        <tr>
-            <td>User:</td>
-            <td><input type='text' name='username' value=''></td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password'/></td>
-        </tr>
-        <tr>
-            <td colspan='2'><input name="submit" type="submit" value="Login"/></td>
-        </tr>
-    </table>
-</form>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="container">
+    <div class="login" >
+        <h1>Войти в личный кабинет</h1>
+        <form method="post" action="/login.html">
+            <p><input type="text" name="username" value="" placeholder="Логин или Email"></p>
+            <p><input type="password" name="password" value="" placeholder="Пароль"></p>
+            <p class="remember_me">
+                <label>
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    Запомнить меня
+                </label>
+            </p>
+            <p class="submit"><input type="submit" name="commit" value="Войти"></p>
+        </form>
+    </div>
+
+    <div class="login-help">
+        <a href="index.html">Забыли пароль?</a> Восстановите его!
+    </div>
+</section>
 </body>
 </html>
+
+<!--<!DOCTYPE html>
+<html>
+<body>
+<form action="/login.html" method="post">
+    <div><label> User Name : <input type="text" name="username"/> </label></div>
+    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="Sign In"/></div>
+</form>
+</body>
+</html>-->
 
 <!--<!DOCTYPE html>
 <html lang="en">

@@ -79,5 +79,10 @@ public class UsersController {
             }else throw new NullValueOfArgumentException("Does not exist:", "id");
         }else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
+
+    @GetMapping("getUser")
+    public String getUs(String name){
+        return usersRepo.findByLogin(name).getLogin();
+    }
 }
 

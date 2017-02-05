@@ -1125,7 +1125,7 @@ samp {
   content: "\E6A8";
 }
 .anticon-frown-o:before {
-  content: "\E6A9";
+  content: "ChineSymbolsNotChange";
 }
 .anticon-calculator:before {
   content: "\E6AA";
@@ -3697,6 +3697,9 @@ samp {
 .ant-select-dropdown-open .ant-select-dropdown {
   display: block;
 }
+
+//=================================================================
+
 .ant-input-search-icon {
   cursor: pointer;
   -webkit-transition: all .3s;
@@ -3717,6 +3720,7 @@ samp {
   top: -1px;
   width: 100%;
 }
+
 .ant-search-input.ant-input-group .ant-input:first-child {
   padding-right: 36px;
 }
@@ -3784,6 +3788,7 @@ samp {
   right: 0;
   background: transparent;
 }
+
 .ant-search-input .ant-search-btn.disabled,
 .ant-search-input .ant-search-btn[disabled],
 .ant-search-input .ant-search-btn.disabled:hover,
@@ -3986,11 +3991,14 @@ samp {
 .ant-search-input .ant-select-combobox .ant-select-selection__rendered {
   margin-right: 29px;
 }
+
+
+
 .ant-input {
   position: relative;
   display: inline-block;
   padding: 4px 7px;
-  width: 100%;
+  width: 200px;
   height: 28px;
   cursor: text;
   font-size: 12px;
@@ -4003,6 +4011,7 @@ samp {
   -webkit-transition: all .3s;
   transition: all .3s;
 }
+
 .ant-input::-moz-placeholder {
   color: #ccc;
   opacity: 1;
@@ -4201,7 +4210,7 @@ textarea.ant-input {
 .ant-input-preSuffix-wrapper {
   position: relative;
   display: inline-block;
-  width: 100%;
+  width: 28%;
 }
 .ant-input-preSuffix-wrapper .ant-input {
   z-index: 1;
@@ -4209,28 +4218,39 @@ textarea.ant-input {
 .ant-input-preSuffix-wrapper:hover .ant-input {
   border-color: #49a9ee;
 }
+
 .ant-input-preSuffix-wrapper .ant-input-prefix,
 .ant-input-preSuffix-wrapper .ant-input-suffix {
-  position: absolute;
-  top: 50%;
+  /*position: absolute;*/
+  position: relative;
+  top: 100%;
   -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
   z-index: 2;
   line-height: 1.2;
 }
+
 .ant-input-preSuffix-wrapper .ant-input-prefix {
-  left: 7px;
+  /*left: 7px;*/
+  left: 20px;
 }
 .ant-input-preSuffix-wrapper .ant-input-suffix {
   right: 7px;
+  /*right: 20px;*/
 }
 .ant-input-preSuffix-wrapper .ant-input:not(:first-child) {
-  padding-left: 24px;
+  /*padding-left: 24px;*/
+  padding-left: 27px;
+  /*padding-left: 0px;*/
 }
 .ant-input-preSuffix-wrapper .ant-input:not(:last-child) {
   padding-right: 24px;
+  /*padding-right: 0px;*/
 }
+
+//=================================================================
+
 .ant-back-top {
   z-index: 10;
   position: fixed;
@@ -12470,6 +12490,7 @@ textarea.ant-mention-wrapper .ant-mention-editor {
     max-height: 0;
   }
 }
+
 .ant-pagination {
   font-size: 12px;
 }
@@ -12491,9 +12512,9 @@ textarea.ant-mention-wrapper .ant-mention-editor {
   cursor: pointer;
   border-radius: 4px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   min-width: 28px;
   height: 28px;
   line-height: 28px;
@@ -12543,8 +12564,8 @@ textarea.ant-mention-wrapper .ant-mention-editor {
   font-size: 12px;
   font-size: 8px \9;
   -webkit-transform: scale(0.66666667) rotate(0deg);
-      -ms-transform: scale(0.66666667) rotate(0deg);
-          transform: scale(0.66666667) rotate(0deg);
+  -ms-transform: scale(0.66666667) rotate(0deg);
+  transform: scale(0.66666667) rotate(0deg);
   /* IE6-IE8 */
   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=1, M12=0, M21=0, M22=1)";
   zoom: 1;
@@ -12554,7 +12575,7 @@ textarea.ant-mention-wrapper .ant-mention-editor {
 :root .ant-pagination-jump-prev:hover:after,
 :root .ant-pagination-jump-next:hover:after {
   -webkit-filter: none;
-          filter: none;
+  filter: none;
 }
 :root .ant-pagination-jump-prev:hover:after,
 :root .ant-pagination-jump-next:hover:after {
@@ -12604,8 +12625,8 @@ textarea.ant-mention-wrapper .ant-mention-editor {
   font-size: 12px;
   font-size: 8px \9;
   -webkit-transform: scale(0.66666667) rotate(0deg);
-      -ms-transform: scale(0.66666667) rotate(0deg);
-          transform: scale(0.66666667) rotate(0deg);
+  -ms-transform: scale(0.66666667) rotate(0deg);
+  transform: scale(0.66666667) rotate(0deg);
   /* IE6-IE8 */
   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=1, M12=0, M21=0, M22=1)";
   zoom: 1;
@@ -12618,7 +12639,7 @@ textarea.ant-mention-wrapper .ant-mention-editor {
 :root .ant-pagination-prev a:after,
 :root .ant-pagination-next a:after {
   -webkit-filter: none;
-          filter: none;
+  filter: none;
 }
 :root .ant-pagination-prev a:after,
 :root .ant-pagination-next a:after {
@@ -12807,6 +12828,7 @@ textarea.ant-pagination-options-quick-jumper input {
     display: none;
   }
 }
+
 .ant-popover {
   position: absolute;
   top: 0;
@@ -14036,6 +14058,8 @@ textarea.ant-pagination-options-quick-jumper input {
 .ant-switch-disabled .ant-switch-inner {
   color: rgba(0, 0, 0, 0.25);
 }
+
+
 .ant-table {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.65);
@@ -14049,7 +14073,9 @@ textarea.ant-pagination-options-quick-jumper input {
   transition: opacity 0.3s ease;
 }
 .ant-table table {
-  width: 100%;
+  /*width: 100%;*/
+  width: 700px;
+  margin: auto;
   border-collapse: separate;
   border-spacing: 0;
   text-align: left;
@@ -14067,7 +14093,8 @@ textarea.ant-pagination-options-quick-jumper input {
   text-align: center;
 }
 .ant-table-thead > tr > th .anticon-filter {
-  margin-left: 4px;
+  /*margin-left: 4px;*/
+  margin: auto;
   font-size: 12px;
   cursor: pointer;
   color: #aaa;
@@ -14184,6 +14211,7 @@ textarea.ant-pagination-options-quick-jumper input {
 .ant-table-loading .ant-table-without-pagination {
   margin-top: 10px;
 }
+
 .ant-table-middle .ant-table-thead > tr > th,
 .ant-table-middle .ant-table-tbody > tr > td {
   padding: 10px 8px;
@@ -14261,8 +14289,8 @@ textarea.ant-pagination-options-quick-jumper input {
   font-size: 12px;
   font-size: 7px \9;
   -webkit-transform: scale(0.58333333) rotate(0deg);
-      -ms-transform: scale(0.58333333) rotate(0deg);
-          transform: scale(0.58333333) rotate(0deg);
+  -ms-transform: scale(0.58333333) rotate(0deg);
+  transform: scale(0.58333333) rotate(0deg);
   /* IE6-IE8 */
   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=1, M12=0, M21=0, M22=1)";
   zoom: 1;
@@ -14273,7 +14301,7 @@ textarea.ant-pagination-options-quick-jumper input {
 :root .ant-table-column-sorter .anticon-caret-up,
 :root .ant-table-column-sorter .anticon-caret-down {
   -webkit-filter: none;
-          filter: none;
+  filter: none;
 }
 :root .ant-table-column-sorter .anticon-caret-up,
 :root .ant-table-column-sorter .anticon-caret-down {
@@ -14351,10 +14379,14 @@ textarea.ant-pagination-options-quick-jumper input {
 .ant-table-placeholder .anticon {
   margin-right: 4px;
 }
+
 .ant-table-pagination {
-  margin: 16px 0;
+  margin: 16px 20%;
+  /*width: 50px;*/
+  /*margin: auto;*/
   float: right;
 }
+
 .ant-table-filter-dropdown {
   min-width: 96px;
   margin-left: -8px;
@@ -14415,9 +14447,9 @@ textarea.ant-pagination-options-quick-jumper input {
   line-height: 14px;
   border: 1px solid #e9e9e9;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   background: #fff;
 }
 .ant-table-row-expand-icon-cell {
@@ -14528,6 +14560,7 @@ tr.ant-table-expanded-row:hover {
 .ant-table.ant-table-scroll-position-right .ant-table-fixed-right {
   box-shadow: none;
 }
+
 .ant-tabs {
   box-sizing: border-box;
   position: relative;

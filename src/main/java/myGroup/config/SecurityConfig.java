@@ -78,8 +78,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers("temp/temp1.html").permitAll()
                 .formLogin().loginPage("/login.html").permitAll().and()
                 .authorizeRequests()
-                .antMatchers("/", "/get**").hasAnyRole("USER", role)
-                .antMatchers("/save**", "/delete**").hasAnyRole(role)
+                .antMatchers("/**").permitAll()
+                /*.antMatchers("/", "/get**").hasAnyRole("USER", role)
+                .antMatchers("/save**", "/delete**").hasAnyRole(role)*/
                 .anyRequest().authenticated()
                 .and()
                 .logout().permitAll();

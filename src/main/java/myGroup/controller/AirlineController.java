@@ -1,6 +1,7 @@
 package myGroup.controller;
 
 
+import myGroup.Cities;
 import myGroup.entity.Airline;
 import myGroup.exception.NullValueOfArgumentException;
 import myGroup.interfaceRepo.AirlineRepo;
@@ -31,6 +32,21 @@ public class AirlineController {
                 return ResponseEntity.status(HttpStatus.OK).body(new AirlineResource(airline));
             } else throw new NullValueOfArgumentException("Does not exist:", "id");
         } else throw new NullValueOfArgumentException("Enter argument:", "id");
+    }
+
+    /*@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+                   consumes = MediaType.TEXT_PLAIN_VALUE, value = "/findCities")*/
+    @GetMapping("/findCities")
+    public List<String> findCities(String city) {
+        System.out.println("HELLO " + city);
+        Cities cities = new Cities();
+        List<String> strings = new ArrayList<>();
+        for (int i=0; i<cities.cities.size();i++){
+            if(cities.cities.get(i).toLowerCase().startsWith(city.toLowerCase())){
+                strings.add(cities.cities.get(i));
+            }
+        }
+        return strings;
     }
 
     @GetMapping("/getAllAirline")

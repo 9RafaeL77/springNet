@@ -8,7 +8,6 @@ import org.json.simple.parser.ParseException;
 
 import myGroup.entity.Flight;
 
-import java.sql.Date ;
 import java.sql.Timestamp;
 
 /**
@@ -17,11 +16,10 @@ import java.sql.Timestamp;
 public class FlightResource {
     private AirlineResource airline;
     private RouteResource route;
-    private Date departureDate;
     private Timestamp departureTime;
     private Timestamp arrivalTime;
-    private Integer passengers;
     private BoardResource board;
+    private Integer passengers;
 
     /*public FlightResource(String string) throws ParseException {
         JSONParser jsonParser = new JSONParser();
@@ -34,11 +32,10 @@ public class FlightResource {
     public FlightResource(Flight flight) {
         this.airline = new AirlineResource(flight.getAirline());
         this.route = new RouteResource(flight.getRoute());
-        this.departureDate = flight.getDepartureDate();
         this.departureTime = flight.getDepartureTime();
         this.arrivalTime = flight.getArrivalTime();
-        this.passengers = flight.getPassengers();
         this.board = new BoardResource(flight.getBoard());
+        this.passengers = flight.getPassengers();
     }
 
     public AirlineResource getAirline() {
@@ -57,14 +54,6 @@ public class FlightResource {
         this.route = route;
     }
 
-    public Date getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(Date departureDate) {
-        this.departureDate = departureDate;
-    }
-
     public Timestamp getDepartureTime() {
         return departureTime;
     }
@@ -81,19 +70,19 @@ public class FlightResource {
         this.arrivalTime = arrivalTime;
     }
 
-    public Integer getPassengers() {
-        return passengers;
-    }
-
-    public void setPassengers(Integer passengers) {
-        this.passengers = passengers;
-    }
-
     public BoardResource getBoard() {
         return board;
     }
 
     public void setBoard(BoardResource board) {
         this.board = board;
+    }
+
+    public Integer getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(Integer passengers) {
+        this.passengers = passengers;
     }
 }

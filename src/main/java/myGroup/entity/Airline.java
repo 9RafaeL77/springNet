@@ -19,7 +19,7 @@ public class Airline implements Identifiable<Integer> {
     @Column(name="company_id")
     @Id
     @GeneratedValue
-    private Integer id;
+    private Integer idAirline;
 
     @Column
     private String name;
@@ -29,11 +29,11 @@ public class Airline implements Identifiable<Integer> {
 
 
     public Integer getId() {
-        return id;
+        return idAirline;
     }
 
-    public void setId(Integer id) {
-        if(id != null) this.id = id;
+    public void setId(Integer idAirline) {
+        if(idAirline != null) this.idAirline = idAirline;
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ package myGroup.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Flight {
 
     @Id
     @Column(name = "flight_id")
-    private Integer id;
+    private Integer flightId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
@@ -30,41 +31,31 @@ public class Flight {
     @JoinColumn(name = "route_id")
     private Route route;
 
-    @Column (name = "departure_date")
-    private Date departureDate;
-
     @Column (name = "departure_time")
     private Timestamp departureTime;
 
     @Column (name = "arrival_time")
     private Timestamp arrivalTime;
 
-    @Column
-    private Integer passengers;
-
     @ManyToOne
     @JoinColumn(name = "board_name")
     private Board board;
+
+    @Column (name = "passengers")
+    private Integer passengers;
+
 
     @ManyToMany
     @JoinTable(name = "comm", joinColumns = {@JoinColumn(name = "flight_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<Users> users = new HashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getFlightId() {
+        return flightId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Date getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(Date departureDate) {
-        this.departureDate = departureDate;
+    public void setFlightId(Integer flightId) {
+        this.flightId = flightId;
     }
 
     public Timestamp getDepartureTime() {

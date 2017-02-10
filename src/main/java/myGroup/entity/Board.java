@@ -16,7 +16,7 @@ public class Board {
 
     @Id
     @Column(name="board_name")
-    private String name;
+    private String boardName;
 
     @Column
     private Integer capacity;
@@ -30,12 +30,12 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private Set<Flight> flights = new HashSet<>();
 
-    public String getName() {
-        return name;
+    public String getBoardName() {
+        return boardName;
     }
 
-    public void setName(String name) {
-        if(name!=null) this.name = name;
+    public void setBoardName(String boardName) {
+        if(boardName !=null) this.boardName = boardName;
     }
 
     public Integer getCapacity() {

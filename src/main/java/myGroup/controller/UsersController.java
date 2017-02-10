@@ -48,7 +48,7 @@ public class UsersController {
             Users users = usersRepo.findOne(id);
             if (users == null) { //в базе нет поля с таким id
                 users = new Users();
-                users.setId(id);
+                users.setUserId(id);
                 if (firstName != null){
                     users.setFirstName(firstName);
                 }else throw new NullValueOfArgumentException("Enter argument:","firstName");

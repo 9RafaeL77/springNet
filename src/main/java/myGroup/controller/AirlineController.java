@@ -84,7 +84,8 @@ public class AirlineController {
 
     @GetMapping("/getAir")
     public Airline getAirline(String name) throws NullValueOfArgumentException {
-        final Airline airline = airlineRepo.findByName(name);
+        //final Airline airline = airlineRepo.findByName(name);
+        Airline airline = airlineRepo.findDistinctNameByName(name);
         return airline;
     }
 

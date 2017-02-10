@@ -1,6 +1,9 @@
 package myGroup.entity;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,17 +13,14 @@ import java.util.Set;
 
 @Entity
 @Table (name = "Route")
-//@Repository("jdbcRouteDAO")
 public class Route {
 
     public Route(){}
 
-
-
     @Id
     @GeneratedValue
     @Column(name = "route_id")
-    private Integer id;
+    private Integer routeId;
 
     @Column(name = "route_from")
     private String routeFrom;
@@ -29,19 +29,19 @@ public class Route {
     private String routeTo;
 
     @Column (name = "flight_time")
-    private String flightTime;
+    private Time flightTime;
 
     @OneToMany(mappedBy = "route")
     private Set<Flight> flights = new HashSet<>();
 
 
 
-    public Integer getId() {
-        return id;
+    public Integer getRouteId() {
+        return routeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setRouteId(Integer routeId) {
+        this.routeId = routeId;
     }
 
     public String getRouteFrom() {
@@ -62,11 +62,11 @@ public class Route {
         if(routeTo!=null) this.routeTo = routeTo;
     }
 
-    public String getFlightTime() {
+    public Time getFlightTime() {
         return flightTime;
     }
 
-    public void setFlightTime(String flightTime) {
+    public void setFlightTime(Time flightTime) {
         if(flightTime != null) this.flightTime = flightTime;
     }
 

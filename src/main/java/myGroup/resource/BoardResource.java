@@ -13,7 +13,7 @@ public class BoardResource {
 
 
     public BoardResource(Board board) {
-        this.name = board.getName();
+        this.name = board.getBoardName();
         this.capacity = board.getCapacity();
         this.econom = board.getEconom();
         this.business = board.getBusiness();

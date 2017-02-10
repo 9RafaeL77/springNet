@@ -2,6 +2,9 @@ package myGroup.controller;
 
 
 import com.google.gson.Gson;
+import myGroup.interfaceRepo.AirlineRepo;
+import myGroup.interfaceRepo.BoardRepo;
+import myGroup.interfaceRepo.RouteRepo;
 import myGroup.resource.FlightResource;
 import myGroup.entity.Airline;
 import myGroup.entity.Board;
@@ -17,9 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 //import org.json.simple.parser.ParseException;
 
@@ -30,6 +39,12 @@ import java.util.List;
 public class FlightController {
     @Autowired
     private FlightRepo flightRepo;
+    @Autowired
+    private AirlineRepo airlineRepo;
+    @Autowired
+    private RouteRepo routeRepo;
+    @Autowired
+    private BoardRepo boardRepo;
 
     @GetMapping("/getFlightById")
     public FlightResource getFlightById(Integer id, HttpServletRequest request) throws NullValueOfArgumentException { //throws ParseException { //принимает String
@@ -59,55 +74,76 @@ public class FlightController {
 
     }*/
 
-    @PostMapping("/saveFlight")
-    public FlightResource saveAirline(Integer id, String airline, String route, String departureDate,
-                                       String departureTime, String arrivalTime, Integer passengers, String board) throws NullValueOfArgumentException {
+    @GetMapping("/saveFlight")
+    public FlightResource saveAirline(Integer id, Integer airlineId, Integer routeId,
+                                      String departureTime, String boardId, Integer passengers)
+            throws NullValueOfArgumentException, ParseException {
         if (id != null) {
             Flight flight = flightRepo.findOne(id);
+            Airline airline;
+            Route route;
+            Board board;
+            Timestamp depTime;
+            Timestamp arrivalTime;
+            if (airlineId != null) {
+                airline = airlineRepo.findOne(airlineId);
+                if (airline == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Airline");
+            } else throw new NullValueOfArgumentException("Enter argument:", "Airline");
+            if (routeId != null) {
+                route = routeRepo.findOne(routeId);
+                if (route == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Route");
+            } else throw new NullValueOfArgumentException("Enter argument:", "Route");
+            if (boardId != null) {
+                board = boardRepo.findOne(boardId);
+                if (board == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Board");
+            } else throw new NullValueOfArgumentException("Enter argument:", "Board");
+            if (departureTime != null) {
+                LocalDateTime dep = LocalDateTime.of(new Date(new SimpleDateFormat("yyyy.MM.dd:HH:mm")
+                                .parse(departureTime).getTime())
+                                .toLocalDate(),
+                        new Time(new SimpleDateFormat("yyyy.MM.dd:HH:mm")
+                                .parse(departureTime).getTime()).toLocalTime());
+                depTime = Timestamp.valueOf(dep);
+                LocalTime flightTime = route.getFlightTime().toLocalTime();
+                arrivalTime = Timestamp.valueOf(depTime.toLocalDateTime().plusHours(flightTime.
+                        getHour()).plusMinutes(flightTime.getMinute()));
+            } else throw new NullValueOfArgumentException("Enter argument:", "departureTime");
+            if (passengers == null) throw new NullValueOfArgumentException("Enter argument:", "passengers");
+            /*-------------------------------------------------------------------------------------------*/
             if (flight == null) { //в базе нет поля с таким id
                 flight = new Flight();
-                flight.setId(id);
-                if (airline != null) {
-                    flight.setAirline(new Gson().fromJson(airline, Airline.class));
-                    System.out.println("AIR "+flight.getAirline().getName());
-                } else throw new NullValueOfArgumentException("Enter argument:", "Airline");
-                if (route != null){
-                    flight.setRoute(new Gson().fromJson(route, Route.class));
-                    System.out.println("ROUTE: " + flight.getRoute().getRouteFrom());
-                } else throw new NullValueOfArgumentException("Enter argument:", "Route");
-                if (departureDate != null){
-                    flight.setDepartureDate(Date.valueOf(departureDate));
-                } else throw new NullValueOfArgumentException("Enter argument:", "departureDate");
-                if (departureTime != null){
-                    flight.setDepartureTime(Timestamp.valueOf(departureTime));
-                } else throw new NullValueOfArgumentException("Enter argument:", "departureTime");
-                if (arrivalTime != null){
-                    flight.setArrivalTime(Timestamp.valueOf(arrivalTime));
-                } else throw new NullValueOfArgumentException("Enter argument:", "arrivalTime");
-                if (passengers != null){
-                    flight.setPassengers(passengers);
-                } else throw new NullValueOfArgumentException("Enter argument:", "passengers");
-                if (board != null){
-                    flight.setBoard(new Gson().fromJson(board, Board.class));
-                } else throw new NullValueOfArgumentException("Enter argument:", "Board");
+                flight.setFlightId(id);
+                //flight.setAirline(new Gson().fromJson(airline, Airline.class));
+                flight.setAirline(airline);
+                System.out.println("AIR " + flight.getAirline().getName());
+                //flight.setRoute(new Gson().fromJson(route, Route.class));
+                flight.setRoute(route);
+                System.out.println("ROUTE: " + flight.getRoute().getRouteFrom());
+                flight.setDepartureTime(depTime);
+                flight.setArrivalTime(arrivalTime);
+                flight.setPassengers(passengers);
+                //flight.setBoard(new Gson().fromJson(board, Board.class));
+                flight.setBoard(board);
                 flightRepo.save(flight);
                 return new FlightResource(flight);
-
             } else {
-                flight.setAirline(new Gson().fromJson(airline, Airline.class));
-                System.out.println("AIR "+flight.getAirline().getName());
-                flight.setRoute(new Gson().fromJson(route, Route.class));
+                //flight.setAirline(new Gson().fromJson(airline, Airline.class));
+                flight.setAirline(airline);
+                System.out.println("AIR " + flight.getAirline().getName());
+                //flight.setRoute(new Gson().fromJson(route, Route.class));
+                flight.setRoute(route);
                 System.out.println("ROUTE: " + flight.getRoute().getRouteFrom());
-                flight.setDepartureDate(Date.valueOf(departureDate));
-                flight.setDepartureTime(Timestamp.valueOf(departureTime));
-                flight.setArrivalTime(Timestamp.valueOf(arrivalTime));
+                flight.setDepartureTime(depTime);
+                flight.setArrivalTime(arrivalTime);
                 flight.setPassengers(passengers);
-                flight.setBoard(new Gson().fromJson(board, Board.class));
+                //flight.setBoard(new Gson().fromJson(board, Board.class));
+                flight.setBoard(board);
                 flightRepo.save(flight);
                 return new FlightResource(flight);
             }
         } else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
+
     @RequestMapping("/getDATE")
     public String date(String date, String date2) {
         //Date date1 = Date.valueOf(date);
@@ -121,12 +157,12 @@ public class FlightController {
 
     @PostMapping("/deleteFlightById")
     public String deleteFlightById(Integer id) throws NullValueOfArgumentException {
-        if(id != null) {
+        if (id != null) {
             Flight flight = flightRepo.findOne(id);
-            if(flight != null) {
+            if (flight != null) {
                 flightRepo.delete(id);
                 return "Flight with id: " + id + " deleted";
-            }else throw new NullValueOfArgumentException("Does not exist:", "id");
-        }else throw new NullValueOfArgumentException("Enter argument:", "id");
+            } else throw new NullValueOfArgumentException("Does not exist:", "id");
+        } else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
 }

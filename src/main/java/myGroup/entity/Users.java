@@ -16,7 +16,7 @@ public class Users {
 
     @Id
     @Column(name = "user_id")
-    private Integer id;
+    private Integer userId;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,12 +36,12 @@ public class Users {
     @ManyToMany(mappedBy = "users")
     private Set<Flight> flights = new HashSet<>();
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {

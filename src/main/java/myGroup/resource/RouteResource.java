@@ -1,6 +1,9 @@
 package myGroup.resource;
 
 import myGroup.entity.Route;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Created by Rafael on 21.11.2016.
@@ -8,8 +11,7 @@ import myGroup.entity.Route;
 public class RouteResource {
     private String routeFrom;
     private String routeTo;
-    private String flightTime;
-
+    private Time flightTime;
 
     public RouteResource(Route route) {
         this.routeFrom = route.getRouteFrom();
@@ -33,11 +35,11 @@ public class RouteResource {
         this.routeTo = routeTo;
     }
 
-    public String getFlightTime() {
+    public Time getFlightTime() {
         return flightTime;
     }
 
-    public void setFlightTime(String flightTime) {
+    public void setFlightTime(Time flightTime) {
         this.flightTime = flightTime;
     }
 }

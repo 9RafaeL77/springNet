@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Time;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rafael on 20.11.2016.
@@ -41,15 +45,15 @@ public class RouteController {
         return routeResources;
     }
 
-    @PostMapping("/saveRoute")
-    public RouteResource saveRoute(Integer id, String routeFrom, String routeTo, String routeTime) throws NullValueOfArgumentException {
+    @GetMapping("/saveRoute")
+    public RouteResource saveRoute(Integer id, String routeFrom, String routeTo, Time  routeTime) throws NullValueOfArgumentException, ParseException {
         Route route = null;
         if (id != null) {
             route = routeRepo.findOne(id);
         }
         if (route == null) { //в базе нет поля с таким id
             route = new Route();
-            route.setId(id);
+            route.setRouteId(id);
             if (routeFrom != null) {
                 route.setRouteFrom(routeFrom);
             } else throw new NullValueOfArgumentException("Enter argument:", "routeFrom");
@@ -74,10 +78,26 @@ public class RouteController {
         }
     }
 
-    @GetMapping("/getRoute")
-    public Route getRoute() {
-        final Route route = routeRepo.findOne(1);
-        return route;
+    @GetMapping("/getrouteFromContaining")
+    public Set<String> getrouteFromContaining(String city) {
+        List <Route> list;
+        list =  routeRepo.findByrouteFromContaining(city);
+        Set <String > set = new HashSet<>();
+        for (Route r : list){
+            set.add(r.getRouteFrom());
+        }
+        return set;
+    }
+
+    @GetMapping("/getrouteToContaining")
+    public Set<String> getrouteToContaining(String city) {
+        List <Route> list;
+        list =  routeRepo.findByrouteToContaining(city);
+        Set <String > set = new HashSet<>();
+        for (Route r : list){
+            set.add(r.getRouteTo());
+        }
+        return set;
     }
 
     @PostMapping("/deleteRouteById")

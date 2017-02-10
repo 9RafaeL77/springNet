@@ -52,7 +52,7 @@ public class BoardController {
             Board board = boardRepo.findOne(name);
             if (board == null) { //в базе нет поля с таким id
                 board = new Board();
-                board.setName(name);
+                board.setBoardName(name);
                 if (capacity != null){
                     board.setCapacity(capacity);
                 }else throw new NullValueOfArgumentException("Enter argument:","capacity");

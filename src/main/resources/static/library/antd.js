@@ -22774,7 +22774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    timePickerLocale: (0, _objectAssign2["default"])({}, _zh_CN4["default"])
 	};
 	// should add whitespace between char in Button
-	locale.lang.ok = '确 定';
+	locale.lang.ok = 'OK';
 	// All settings at:
 	// https://github.com/ant-design/ant-design/issues/424
 	exports["default"] = locale;
@@ -23311,11 +23311,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var defaultFooter = [_react2["default"].createElement(
 	            _button2["default"],
 	            { key: 'cancel', type: 'ghost', size: 'large', onClick: this.handleCancel },
-	            cancelText || '取消'
+	            cancelText || 'Cancel'
 	        ), _react2["default"].createElement(
 	            _button2["default"],
 	            { key: 'confirm', type: 'primary', size: 'large', loading: confirmLoading, onClick: this.handleOk },
-	            okText || '确定'
+	            okText || 'OK'
 	        )];
 	        return _react2["default"].createElement(_rcDialog2["default"], (0, _extends3["default"])({ onClose: this.handleCancel, footer: footer || defaultFooter }, this.props, { visible: visible, mousePosition: mousePosition }));
 	    };
@@ -23371,8 +23371,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	var defaultLocale = {
-	    okText: '确定',
-	    cancelText: '取消',
+	    okText: 'OK',
+	    cancelText: 'Cancel',
 	    justOkText: '知道了'
 	};
 	var runtimeLocale = (0, _objectAssign2["default"])({}, defaultLocale);
@@ -28819,7 +28819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  today: '今天',
 	  now: '此刻',
 	  backToToday: '返回今天',
-	  ok: '确定',
+	  ok: 'OK',
 	  timeSelect: '选择时间',
 	  dateSelect: '选择日期',
 	  clear: '清除',
@@ -41186,12 +41186,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _react2["default"].createElement(
 	                        _button2["default"],
 	                        { onClick: this.cancel, type: 'ghost', size: 'small' },
-	                        cancelText || '取消'
+	                        cancelText || 'Cancel'
 	                    ),
 	                    _react2["default"].createElement(
 	                        _button2["default"],
 	                        { onClick: this.confirm, type: 'primary', size: 'small' },
-	                        okText || '确定'
+	                        okText || 'OK'
 	                    )
 	                )
 	            )
@@ -42408,7 +42408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	var defaultLocale = {
 	    filterTitle: '筛选',
-	    filterConfirm: '确定',
+	    filterConfirm: 'OK',
 	    filterReset: '重置',
 	    emptyText: _react2["default"].createElement(
 	        'span',

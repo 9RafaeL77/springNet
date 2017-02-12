@@ -3160,6 +3160,7 @@ samp {
 }
 .ant-select {
   box-sizing: border-box;
+  margin-left: 18px;
   display: inline-block;
   position: relative;
   color: rgba(0, 0, 0, 0.65);
@@ -3310,6 +3311,7 @@ samp {
 }
 .ant-select-selection--single {
   height: 28px;
+  width: 210px;
   position: relative;
   cursor: pointer;
 }
@@ -3998,10 +4000,10 @@ samp {
   position: relative;
   display: inline-block;
   padding: 4px 7px;
-  width: 200px;
+  width: 80px;
   height: 28px;
   cursor: text;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.65);
   background-color: #fff;
@@ -4487,7 +4489,8 @@ textarea.ant-input {
 }
 .ant-btn {
   display: inline-block;
-  margin-bottom: 0;
+  margin-bottom: 10px;
+  margin-top: 10px;
   font-weight: 500;
   text-align: center;
   -ms-touch-action: manipulation;
@@ -13958,6 +13961,7 @@ textarea.ant-pagination-options-quick-jumper input {
   display: inline-block;
   box-sizing: border-box;
   height: 22px;
+  margin-left: 15px;
   min-width: 44px;
   line-height: 20px;
   vertical-align: middle;
@@ -14074,7 +14078,7 @@ textarea.ant-pagination-options-quick-jumper input {
 }
 .ant-table table {
   /*width: 100%;*/
-  width: 700px;
+  width: 65%;
   margin: auto;
   border-collapse: separate;
   border-spacing: 0;
@@ -14370,6 +14374,7 @@ textarea.ant-pagination-options-quick-jumper input {
 }
 .ant-table-placeholder {
   padding: 16px 8px;
+  opacity: 0;
   background: #fff;
   border-bottom: 1px solid #e9e9e9;
   text-align: center;

@@ -25,7 +25,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 body {
-  font: 13px/20px 'Lucida Grande', Tahoma, Verdana, sans-serif;
+  /*font: 13px/20px 'Lucida Grande', Tahoma, Verdana, sans-serif;*/
   color: #404040;
   background: #0ca3d2;
 }
@@ -52,15 +52,21 @@ table,th,td {
   -o-animation: myanim 2s;
   animation: myanim 2s;
 }
-
+span {
+  -webkit-animation: myanim 2s;
+  -moz-animation: myanim 2s;
+  -o-animation: myanim 2s;
+  animation: myanim 2s;
+}
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
 #root {
-  /*width: 60%;*/
-  /*text-align: center;*/
+  margin-top:20px;
+  width: 100%;
+  text-align: center;
 }
 
 #paragraph {
@@ -75,14 +81,11 @@ table {
   background-size: 100%;
 }
 
-#routeTo{
-  size:large;
-}
 .tabPane{
   background: #000000;
 }
 
-/*
+
 .anticon-close-circle {
   cursor: pointer;
   color: #ccc;
@@ -128,7 +131,7 @@ table {
     opacity: 0.9;
   }
 }
-
+/*
 body {
   line-height: 1;
 }

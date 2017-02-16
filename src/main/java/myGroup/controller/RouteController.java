@@ -50,32 +50,33 @@ public class RouteController {
         Route route = null;
         if (id != null) {
             route = routeRepo.findOne(id);
-        }
-        if (route == null) { //в базе нет поля с таким id
-            route = new Route();
-            route.setRouteId(id);
-            if (routeFrom != null) {
+            System.out.println("ID1: " + id);
+            if (route == null) { //в базе нет поля с таким id
+                route = new Route();
+                route.setRouteId(id);
+                System.out.println("ID2: " + id);
+                if (routeFrom != null) {
+                    route.setRouteFrom(routeFrom);
+                } else throw new NullValueOfArgumentException("Enter argument:", "routeFrom");
+                if (routeTo != null) {
+                    route.setRouteTo(routeTo);
+                } else throw new NullValueOfArgumentException("Enter argument:", "routeTo");
+                if (routeTime != null) {
+                    route.setFlightTime(routeTime);
+                } else throw new NullValueOfArgumentException("Enter argument:", "routeTime");
+                routeRepo.save(route);
+                RouteResource routeResources = new RouteResource(route);
+                return routeResources;
+            } else {
+                System.out.println("ID3: " + id);
                 route.setRouteFrom(routeFrom);
-            } else throw new NullValueOfArgumentException("Enter argument:", "routeFrom");
-            if (routeTo != null) {
                 route.setRouteTo(routeTo);
-            } else throw new NullValueOfArgumentException("Enter argument:", "routeTo");
-            if (routeTime != null) {
                 route.setFlightTime(routeTime);
-            } else throw new NullValueOfArgumentException("Enter argument:", "routeTime");
-            routeRepo.save(route);
-            RouteResource routeResources = new RouteResource(route);
-            routeRepo.save(route);
-            return routeResources;
-        } else {
-            route.setRouteFrom(routeFrom);
-            route.setRouteTo(routeTo);
-            route.setFlightTime(routeTime);
-            routeRepo.save(route);
-            RouteResource routeResources = new RouteResource(route);
-            routeRepo.save(route);
-            return routeResources;
-        }
+                routeRepo.save(route);
+                RouteResource routeResources = new RouteResource(route);
+                return routeResources;
+            }
+        }else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
 
     @GetMapping("/getrouteFromContaining")
@@ -100,7 +101,7 @@ public class RouteController {
         return set;
     }
 
-    @PostMapping("/deleteRouteById")
+    @GetMapping("/deleteRouteById")
     public String deleteRouteById(Integer id) throws NullValueOfArgumentException {
         if (id != null) {
             Route route = routeRepo.findOne(id);

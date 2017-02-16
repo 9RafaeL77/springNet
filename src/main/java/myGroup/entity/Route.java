@@ -18,7 +18,7 @@ public class Route {
     public Route(){}
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     @Column(name = "route_id")
     private Integer routeId;
 

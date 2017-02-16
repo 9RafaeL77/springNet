@@ -9,14 +9,24 @@ import java.time.LocalDateTime;
  * Created by Rafael on 21.11.2016.
  */
 public class RouteResource {
+    private Integer id;
     private String routeFrom;
     private String routeTo;
     private Time flightTime;
 
     public RouteResource(Route route) {
+        this.id = route.getRouteId();
         this.routeFrom = route.getRouteFrom();
         this.routeTo = route.getRouteTo();
         this.flightTime = route.getFlightTime();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getRouteFrom() {

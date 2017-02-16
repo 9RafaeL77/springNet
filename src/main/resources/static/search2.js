@@ -13,6 +13,9 @@ var TimePicker = antd.TimePicker;
 var moment = moment;
 const Option = Select.Option;
 
+
+
+var edit = false;
 class EditableCell extends React.Component {
     state = {
         value: this.props.value,
@@ -20,27 +23,28 @@ class EditableCell extends React.Component {
     };
     handleChange = (e) => {
         const value = e.target.value;
-        this.setState({ value });
+        this.setState({value});
     };
-    handleChangeDate = (time,timeString) => {
+    handleChangeDate = (time, timeString) => {
         if (this.props.onChange) {
             this.props.onChange(timeString, this.props.id);
         }
     };
     check = () => {
-        this.setState({ editable: false });
+        this.setState({editable: false});
         if (this.props.onChange) {
             this.props.onChange(this.state.value, this.props.id);
         }
     };
     edit = () => {
-        this.setState({ editable: true });
+        this.setState({editable: true});
     };
+
     render() {
-        const { value, editable } = this.state;
-        if (this.props.id === 'flightTime'){
-            return <TimePicker defaultValue={moment('12:08:23', 'HH:mm:ss')} onChange={this.handleChangeDate} />;
-        }else return (<div className="editable-cell">
+        const {value, editable} = this.state;
+        if (this.props.id === 'flightTime') {
+            return <TimePicker defaultValue={moment('12:08:23', 'HH:mm:ss')} onChange={this.handleChangeDate}/>;
+        } else return (<div className="editable-cell">
             {
                 editable ?
                     <div className="editable-cell-input-wrapper">
@@ -83,39 +87,40 @@ class ProductTable extends React.Component {
             };
         } else {
             return {
-                key:product.key,
+                key: product.key,
                 routeTo: <span style={{color: 'red'}}>{product.routeTo}</span>,
                 routeFrom: <span style={{color: 'red'}}>{product.routeFrom}</span>,
                 flightTime: <span style={{color: 'red'}}>{product.flightTime}</span>,
                 boardName: <span style={{color: 'red'}}>{product.boardName}</span>,
                 airCompany: <span style={{color: 'red'}}>{product.airCompany}</span>,
-                delay:  <span style={{color: 'red'}}>{product.delay.toString()}</span>
+                delay: <span style={{color: 'red'}}>{product.delay.toString()}</span>
             };
         }
     }
+
     rows = [];
 
     onCellChange = (index) => {
         return (value, id) => {
             console.log("KEY: " + id);
             var temp = this.props.products.get(this.rows[index].key);
-            if (id ==='routeTo') {
+            if (id === 'routeTo') {
                 temp.routeTo = value;
             }
-            if (id ==='routeFrom') {
+            if (id === 'routeFrom') {
                 temp.routeFrom = value;
             }
-            if (id ==='flightTime') {
+            if (id === 'flightTime') {
                 temp.flightTime = value;
             }
-            if (id ==='boardName') {
+            if (id === 'boardName') {
                 temp.boardName = value;
 
             }
-            if (id ==='airCompany') {
+            if (id === 'airCompany') {
                 temp.airCompany = value;
             }
-            if (id ==='delay') {
+            if (id === 'delay') {
                 temp.delay = Boolean(value);
             }
             this.props.products.set(this.rows[index].key, temp);
@@ -127,12 +132,12 @@ class ProductTable extends React.Component {
     };
     handleAdd = () => {
         var max;
-        for(let key of this.props.products.keys()) {
+        for (let key of this.props.products.keys()) {
             max = key;
         }
-        var k = (+max+1)+'';
+        var k = (+max + 1) + '';
         const newData = {
-            key:k,
+            key: k,
             routeTo: 'Samara',
             routeFrom: 'Moscow',
             flightTime: '0:00',
@@ -140,9 +145,13 @@ class ProductTable extends React.Component {
             airCompany: 'SAMARA',
             delay: false
         };
-        this.props.products.set(k,newData);
+        this.props.products.set(k, newData);
         this.forceUpdate();
     };
+    handleEd = () => {
+        edit = true;
+    };
+
     render() {
         var tag = '';
         if (this.props.filterText === '' && this.props.routeFrom === '') {
@@ -161,59 +170,73 @@ class ProductTable extends React.Component {
                         onChange={this.onCellChange(index, 'routeTo', record)}
                     />
                 )
-            }, {title: 'RouteFrom', dataIndex: 'routeFrom', key: 'routeFrom',width: '17%',
+            }, {
+                title: 'RouteFrom', dataIndex: 'routeFrom', key: 'routeFrom', width: '17%',
                 render: (text, record, index) => (
                     <EditableCell
                         value={text}
                         id="routeFrom"
                         onChange={this.onCellChange(index, 'routeFrom', record)}
                     />
-                )},
-                {title: 'Flight Time', dataIndex: 'flightTime', key: 'flightTime',width: '10%',
+                )
+            },
+                {
+                    title: 'Flight Time', dataIndex: 'flightTime', key: 'flightTime', width: '10%',
                     render: (text, record, index) => (
                         <EditableCell
                             value={text}
                             id="flightTime"
                             onChange={this.onCellChange(index, 'flightTime', record)}
                         />
-                    )},
-                {title: 'Board Name', dataIndex: 'boardName', key: 'boardName',width: '12%',
+                    )
+                },
+                {
+                    title: 'Board Name', dataIndex: 'boardName', key: 'boardName', width: '12%',
                     render: (text, record, index) => (
                         <EditableCell
                             value={text}
                             id="boardName"
                             onChange={this.onCellChange(index, 'boardName', record)}
                         />
-                    )},
-                {title: 'Airline Company', dataIndex: 'airCompany', key: 'airCompany',width: '14%',
+                    )
+                },
+                {
+                    title: 'Airline Company', dataIndex: 'airCompany', key: 'airCompany', width: '14%',
                     render: (text, record, index) => (
                         <EditableCell
                             value={text}
                             id="airCompany"
                             onChange={this.onCellChange(index, 'airCompany', record)}
                         />
-                    )},
-                {title: 'Delay', dataIndex: 'delay', key: 'delay',width: '12%',
+                    )
+                },
+                {
+                    title: 'Delay', dataIndex: 'delay', key: 'delay', width: '12%',
                     render: (text, record, index) => (
                         <EditableCell
                             value={text}
                             id="delay"
                             onChange={this.onCellChange(index, 'delay', record)}
                         />
-                    )},
+                    )
+                },
                 {
                     title: 'operation',
                     dataIndex: 'operation',
                     render: (text, record, index) => {
                         return (
                             this.props.products.size > 1 ?
-                                (
-                                    <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(index)}>
-                                        <a href="#">Delete</a>
-                                    </Popconfirm>
+                                (   <div>
+                                        <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(index)}>
+                                            <a href="#">Delete</a>
+                                        </Popconfirm>
+                                        <Popconfirm title="Sure to edit?" onConfirm={() => this.handleEd(index)}>
+                                            <a href="#">Edit</a>
+                                        </Popconfirm>
+                                    </div>
                                 ) : null
                         );
-                    },
+                    }
                 }];
             this.rows.splice(0, this.rows.length);
             this.props.products.forEach((value, key, product) => {
@@ -228,8 +251,8 @@ class ProductTable extends React.Component {
             const pagination = {
                 defaultPageSize: 5
             };
-            tag =<div><Button className="editable-add-btn" onClick={this.handleAdd}>Добавить</Button>
-                    <Table bordered dataSource={this.rows} columns={columns} pagination={pagination}/></div>;
+            tag = <div><Button className="editable-add-btn" onClick={this.handleAdd}>Добавить</Button>
+                <Table bordered dataSource={this.rows} columns={columns} pagination={pagination}/></div>;
         }
         return tag;
     }
@@ -258,6 +281,7 @@ class SearchBar extends React.Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSelect2 = this.handleSelect2.bind(this);
     };
+
     getCities(value, self, name) {
         $.ajax({
             type: 'GET',
@@ -278,13 +302,13 @@ class SearchBar extends React.Component {
     }
 
     handleSelect(e) {
-        if(e == undefined){
-            e='';
+        if (e == undefined) {
+            e = '';
         }
         dataCity.splice(0, dataCity.length);
         setState('routeTo', e);
         var self = this;
-        if(e!=='') {
+        if (e !== '') {
             var name = 'To'
             self.getCities(e, self, name);
         }
@@ -295,14 +319,15 @@ class SearchBar extends React.Component {
         );
 
     }
+
     handleSelect2(e) {
-        if(e == undefined){
-            e='';
+        if (e == undefined) {
+            e = '';
         }
         dataCity.splice(0, dataCity.length);
         setState('routeFrom', e);
         var self = this;
-        if(e!=='') {
+        if (e !== '') {
             var name = 'From'
             self.getCities(e, self, name);
         }
@@ -313,6 +338,7 @@ class SearchBar extends React.Component {
         );
 
     }
+
     isCheck = (e) => {
         setState('check', e);
         this.props.onUserInput(
@@ -321,41 +347,42 @@ class SearchBar extends React.Component {
             state.check
         );
     };
+
     render() {
         return (
             <form>
-                    <Select
-                        combobox
-                        value={this.props.filterText}
-                        placeholder="Откуда..."
-                        style={{width: 200}}
-                        defaultActiveFirstOption={false}
-                        showArrow={true}
-                        showSearch={true}
-                        allowClear={true}
-                        filterOption={false}
-                        onChange={this.handleSelect}
-                    >
-                        {dataCity}
-                    </Select>
-                    <Select
-                     combobox
-                     value={this.props.routeFrom}
-                     placeholder="Куда..."
-                     style={{ width: 200 }}
-                     defaultActiveFirstOption={false}
-                     showArrow={true}
-                     showSearch={true}
-                     allowClear={true}
-                     filterOption={false}
-                     onChange={this.handleSelect2}
-                     >
-                     {dataCity}
-                     </Select>
-                    <Switch
-                        onChange={this.isCheck}
-                        checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="cross"/>}/>
-                    {' '}
+                <Select
+                    combobox
+                    value={this.props.filterText}
+                    placeholder="Откуда..."
+                    style={{width: 200}}
+                    defaultActiveFirstOption={false}
+                    showArrow={true}
+                    showSearch={true}
+                    allowClear={true}
+                    filterOption={false}
+                    onChange={this.handleSelect}
+                >
+                    {dataCity}
+                </Select>
+                <Select
+                    combobox
+                    value={this.props.routeFrom}
+                    placeholder="Куда..."
+                    style={{width: 200}}
+                    defaultActiveFirstOption={false}
+                    showArrow={true}
+                    showSearch={true}
+                    allowClear={true}
+                    filterOption={false}
+                    onChange={this.handleSelect2}
+                >
+                    {dataCity}
+                </Select>
+                <Switch
+                    onChange={this.isCheck}
+                    checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="cross"/>}/>
+                {' '}
             </form>
         );
     }
@@ -401,8 +428,8 @@ class FilterableProductTable extends React.Component {
     }
 }
 let AIRLINES = new Map([
-    ['0',  {
-        key:'0',
+    ['0', {
+        key: '0',
         routeTo: 'Samara',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -410,8 +437,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['1',  {
-        key:'1',
+    ['1', {
+        key: '1',
         routeTo: 'Samara',
         routeFrom: 'St.Petersburg',
         flightTime: '1:00',
@@ -419,8 +446,8 @@ let AIRLINES = new Map([
         airCompany: 'Airoflot',
         delay: false
     }],
-    ['2',  {
-        key:'2',
+    ['2', {
+        key: '2',
         routeTo: 'Samara',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -429,7 +456,7 @@ let AIRLINES = new Map([
         delay: false
     }],
     ['3', {
-        key:'3',
+        key: '3',
         routeTo: 'Moscow',
         routeFrom: 'Samara',
         flightTime: '1:00',
@@ -437,8 +464,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: true
     }],
-    ['4',  {
-        key:'4',
+    ['4', {
+        key: '4',
         routeTo: 'Berlin',
         routeFrom: 'St.Petersburg',
         flightTime: '1:00',
@@ -446,8 +473,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['5',  {
-        key:'5',
+    ['5', {
+        key: '5',
         routeTo: 'St.Petersburg',
         routeFrom: 'Samara',
         flightTime: '1:00',
@@ -455,8 +482,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['6',  {
-        key:'6',
+    ['6', {
+        key: '6',
         routeTo: 'Kazan',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -464,8 +491,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: true
     }],
-    ['7',  {
-        key:'7',
+    ['7', {
+        key: '7',
         routeTo: 'Saratov',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -473,8 +500,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['8',  {
-        key:'8',
+    ['8', {
+        key: '8',
         routeTo: 'Sochi',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -482,8 +509,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['9',  {
-        key:'9',
+    ['9', {
+        key: '9',
         routeTo: 'Penza',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -491,8 +518,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: true
     }],
-    ['10',  {
-        key:'10',
+    ['10', {
+        key: '10',
         routeTo: 'Pskov',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -500,8 +527,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['11',  {
-        key:'11',
+    ['11', {
+        key: '11',
         routeTo: 'Volgograg',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -509,8 +536,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: true
     }],
-    ['12',  {
-        key:'12',
+    ['12', {
+        key: '12',
         routeTo: 'Kaluga',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -518,8 +545,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['13',  {
-        key:'13',
+    ['13', {
+        key: '13',
         routeTo: 'Barnaul',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -527,16 +554,17 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['14',  {
-        key:'14',
+    ['14', {
+        key: '14',
         routeTo: 'Ufa',
         routeFrom: 'Moscow',
         flightTime: '1:00',
         boardName: 'Boing',
         airCompany: 'DubaiAir',
-        delay: true}],
-    ['15',  {
-        key:'15',
+        delay: true
+    }],
+    ['15', {
+        key: '15',
         routeTo: 'Irkutsk',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -544,8 +572,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['16',  {
-        key:'16',
+    ['16', {
+        key: '16',
         routeTo: 'Dubai',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -553,8 +581,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: false
     }],
-    ['17',  {
-        key:'17',
+    ['17', {
+        key: '17',
         routeTo: 'London',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -562,8 +590,8 @@ let AIRLINES = new Map([
         airCompany: 'DubaiAir',
         delay: true
     }],
-    ['18',  {
-        key:'18',
+    ['18', {
+        key: '18',
         routeTo: 'Paris',
         routeFrom: 'Moscow',
         flightTime: '1:00',
@@ -573,215 +601,215 @@ let AIRLINES = new Map([
     }]
 ]);
 /*var AIRLINES = [
-    {
-        key:0,
-        routeTo: 'Samara',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:1,
-        routeTo: 'Samara',
-        routeFrom: 'St.Petersburg',
-        flightTime: '1:00',
-        boardName: '777',
-        airCompany: 'Airoflot',
-        delay: false
-    },
-    {
-        key:2,
-        routeTo: 'Samara',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'Airoflot',
-        delay: false
-    },
-    {
-        key:3,
-        routeTo: 'Moscow',
-        routeFrom: 'Samara',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    },
-    {
-        key:4,
-        routeTo: 'Berlin',
-        routeFrom: 'St.Petersburg',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:5,
-        routeTo: 'St.Petersburg',
-        routeFrom: 'Samara',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:6,
-        routeTo: 'Kazan',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    },
-    {
-        key:7,
-        routeTo: 'Saratov',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:8,
-        routeTo: 'Sochi',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:9,
-        routeTo: 'Penza',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    },
-    {
-        key:10,
-        routeTo: 'Pskov',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:11,
-        routeTo: 'Volgograg',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    },
-    {
-        key:12,
-        routeTo: 'Kaluga',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:13,
-        routeTo: 'Barnaul',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {key:14, routeTo: 'Ufa', routeFrom: 'Moscow', flightTime: '1:00', boardName: 'Boing', airCompany: 'DubaiAir', delay: true},
-    {
-        key:15,
-        routeTo: 'Irkutsk',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:16,
-        routeTo: 'Dubai',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:17,
-        routeTo: 'London',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    },
-    {
-        key:18,
-        routeTo: 'Paris',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:19,
-        routeTo: 'New York',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:20,
-        routeTo: 'Manchester',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:21,
-        routeTo: 'Liverpool',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:22,
-        routeTo: 'Barcelona',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: false
-    },
-    {
-        key:23,
-        routeTo: 'Madrid',
-        routeFrom: 'Moscow',
-        flightTime: '1:00',
-        boardName: 'Boeing',
-        airCompany: 'DubaiAir',
-        delay: true
-    }
-];*/
+ {
+ key:0,
+ routeTo: 'Samara',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:1,
+ routeTo: 'Samara',
+ routeFrom: 'St.Petersburg',
+ flightTime: '1:00',
+ boardName: '777',
+ airCompany: 'Airoflot',
+ delay: false
+ },
+ {
+ key:2,
+ routeTo: 'Samara',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'Airoflot',
+ delay: false
+ },
+ {
+ key:3,
+ routeTo: 'Moscow',
+ routeFrom: 'Samara',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ },
+ {
+ key:4,
+ routeTo: 'Berlin',
+ routeFrom: 'St.Petersburg',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:5,
+ routeTo: 'St.Petersburg',
+ routeFrom: 'Samara',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:6,
+ routeTo: 'Kazan',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ },
+ {
+ key:7,
+ routeTo: 'Saratov',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:8,
+ routeTo: 'Sochi',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:9,
+ routeTo: 'Penza',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ },
+ {
+ key:10,
+ routeTo: 'Pskov',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:11,
+ routeTo: 'Volgograg',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ },
+ {
+ key:12,
+ routeTo: 'Kaluga',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:13,
+ routeTo: 'Barnaul',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {key:14, routeTo: 'Ufa', routeFrom: 'Moscow', flightTime: '1:00', boardName: 'Boing', airCompany: 'DubaiAir', delay: true},
+ {
+ key:15,
+ routeTo: 'Irkutsk',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:16,
+ routeTo: 'Dubai',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:17,
+ routeTo: 'London',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ },
+ {
+ key:18,
+ routeTo: 'Paris',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:19,
+ routeTo: 'New York',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:20,
+ routeTo: 'Manchester',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:21,
+ routeTo: 'Liverpool',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:22,
+ routeTo: 'Barcelona',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: false
+ },
+ {
+ key:23,
+ routeTo: 'Madrid',
+ routeFrom: 'Moscow',
+ flightTime: '1:00',
+ boardName: 'Boeing',
+ airCompany: 'DubaiAir',
+ delay: true
+ }
+ ];*/
 
 ReactDOM.render(
     <FilterableProductTable products={AIRLINES}/>,

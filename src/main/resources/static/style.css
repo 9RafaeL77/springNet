@@ -29,6 +29,10 @@ body {
   color: #404040;
   background: #0ca3d2;
 }
+.ant-btn.ant-btn-danger{
+  background: red;
+  color: white;
+}
 
 table,th,td {
   border-spacing: 2px 2px;

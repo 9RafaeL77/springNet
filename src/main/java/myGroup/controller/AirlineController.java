@@ -1,7 +1,5 @@
 package myGroup.controller;
 
-
-import myGroup.Cities;
 import myGroup.entity.Airline;
 import myGroup.exception.NullValueOfArgumentException;
 import myGroup.interfaceRepo.AirlineRepo;
@@ -36,7 +34,7 @@ public class AirlineController {
 
     /*@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
                    consumes = MediaType.TEXT_PLAIN_VALUE, value = "/findCities")*/
-    @GetMapping("/findCities")
+    /*@GetMapping("/findCities")
     public List<String> findCities(String city) {
         System.out.println("HELLO " + city);
         Cities cities = new Cities();
@@ -47,7 +45,7 @@ public class AirlineController {
             }
         }
         return strings;
-    }
+    }*/
 
     @GetMapping("/getAllAirline")
     public List<AirlineResource> findAll() {

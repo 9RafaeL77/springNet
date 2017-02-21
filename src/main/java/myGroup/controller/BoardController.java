@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rafael on 20.11.2016.
@@ -20,10 +22,10 @@ public class BoardController {
     @Autowired
     private BoardRepo boardRepo;
 
-    @GetMapping("/getBoardById")
-    public BoardResource getBoardById(String name) throws NullValueOfArgumentException {
-        if(name!=null) {
-            final Board board = boardRepo.findOne(name);
+    @PostMapping("/getBoardById")
+    public BoardResource getBoardById(Integer boardId) throws NullValueOfArgumentException {
+        if(boardId!=null) {
+            final Board board = boardRepo.findOne(boardId);
             if (board != null) {
                 BoardResource boardResource = new BoardResource(board);
                 return boardResource;
@@ -47,27 +49,32 @@ public class BoardController {
     }*/
 
     @PostMapping("/saveBoard")
-    public BoardResource saveAirline(String name, Integer capacity, Integer econom, Integer business) throws NullValueOfArgumentException {
+    public BoardResource saveBoard(Integer boardId, String name, Integer capacity, Integer economy, Integer business)
+            throws NullValueOfArgumentException {
         if(name != null) {
-            Board board = boardRepo.findOne(name);
+            Board board = boardRepo.findOne(boardId);
             if (board == null) { //в базе нет поля с таким id
                 board = new Board();
-                board.setBoardName(name);
+                board.setBoardId(boardId);
+                if (name != null){
+                    board.setBoardName(name);
+                }else throw new NullValueOfArgumentException("Enter argument:","boardName");
                 if (capacity != null){
                     board.setCapacity(capacity);
                 }else throw new NullValueOfArgumentException("Enter argument:","capacity");
-                if (econom != null){
-                    board.setEconom(econom);
-                }else throw new NullValueOfArgumentException("Enter argument:","econom");
+                if (economy != null){
+                    board.setEconomy(economy);
+                }else throw new NullValueOfArgumentException("Enter argument:","economy");
                 if (business != null){
-                    board.setEconom(business);
+                    board.setBusiness(business);
                 }else throw new NullValueOfArgumentException("Enter argument:","business");
                 BoardResource boardResource = new BoardResource(board);
                 boardRepo.save(board);
                 return boardResource;
             } else {
+                board.setBoardName(name);
                 board.setCapacity(capacity);
-                board.setEconom(econom);
+                board.setEconomy(economy);
                 board.setBusiness(business);
                 BoardResource boardResource = new BoardResource(board);
                 boardRepo.save(board);
@@ -76,19 +83,31 @@ public class BoardController {
         } else throw new NullValueOfArgumentException("Enter argument:", "name");
     }
 
-    @GetMapping("/getBoard")
+    /*@GetMapping("/getBoard")
     public Board getBoard() {
         final Board board = boardRepo.findOne("747");
         return board;
+    }*/
+
+    @PostMapping("/getboardNameContaining")
+    public Set<String> getboardNameContaining(String name) {
+        List <Board> list;
+        list =  boardRepo.findByboardNameContaining(name);
+        Set <String > set = new HashSet<>();
+        for (Board r : list){
+            set.add(r.getBoardName());
+        }
+        return set;
     }
 
+
     @PostMapping("/deleteBoardById")
-    public String deleteBoardById(String name) throws NullValueOfArgumentException {
-        if(name != null) {
-            Board board = boardRepo.findOne(name);
+    public String deleteBoardById(Integer boardId) throws NullValueOfArgumentException {
+        if(boardId != null) {
+            Board board = boardRepo.findOne(boardId);
             if (board != null) {
-                boardRepo.delete(name);
-                return "Board with name: " + name + " deleted";
+                boardRepo.delete(boardId);
+                return "Board with name: " + boardId + " deleted";
             }else throw new NullValueOfArgumentException("Does not exist:", "name");
         }else throw new NullValueOfArgumentException("Enter argument:", "name");
     }

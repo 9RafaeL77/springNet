@@ -15,20 +15,31 @@ public class Board {
     public Board(){}
 
     @Id
-    @Column(name="board_name")
+    @Column(name = "board_id")
+    private Integer boardId;
+
+    @Column(name="board_name", unique = true)
     private String boardName;
 
     @Column
     private Integer capacity;
 
     @Column
-    private Integer econom;
+    private Integer economy;
 
     @Column
     private Integer business;
 
     @OneToMany(mappedBy = "board")
     private Set<Flight> flights = new HashSet<>();
+
+    public Integer getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(Integer boardId) {
+        this.boardId = boardId;
+    }
 
     public String getBoardName() {
         return boardName;
@@ -46,12 +57,12 @@ public class Board {
         if(capacity!=null) this.capacity = capacity;
     }
 
-    public Integer getEconom() {
-        return econom;
+    public Integer getEconomy() {
+        return economy;
     }
 
-    public void setEconom(Integer econom) {
-        if(econom!=null) this.econom = econom;
+    public void setEconomy(Integer economy) {
+        if(economy!=null) this.economy = economy;
     }
 
     public Integer getBusiness() {

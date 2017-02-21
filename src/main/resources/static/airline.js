@@ -1,27 +1,23 @@
 /**
- * Created by Rafael on 13.02.2017.
+ * Created by Rafael on 20.02.2017.
  */
-
 var Table = antd.Table;
 var Icon = antd.Icon;
-var Switch = antd.Switch;
 var Select = antd.Select;
 var Button = antd.Button;
 var Popconfirm = antd.Popconfirm;
 var Input = antd.Input;
-var TimePicker = antd.TimePicker;
-var moment = moment;
 const Option = Select.Option;
 
-/*let map = new Map();
- function getRoute() {
+ /*let airlineMap = new Map();
+ function getAirline() {
  var request;
  if (window.XMLHttpRequest) {
  request = new XMLHttpRequest();
  } else {
  request = new ActiveXObject("Microsoft.XMLHTTP");
  }
- request.open('GET', 'http://localhost:8080//getAllRoute', false);
+ request.open('GET', 'http://localhost:8080//getAllAirline', false);
  request.onreadystatechange = function () {
  if ((request.readyState === 4) && (request.status === 200)) {
  var dataJson = JSON.parse(request.responseText);
@@ -29,15 +25,14 @@ const Option = Select.Option;
  dataJson.forEach((product) => {
  var isNew = false;
  var arr = {product,isNew};
- map.set(product.id, arr);
+ airlineMap.set(product.id, arr);
  })
  };
  request.send();
  }
+ getAirline();*/
 
- getRoute();*/
-
-class RouteEditableCell extends React.Component {
+class AirlineEditableCell extends React.Component {
     state = {
         value: this.props.value,
         editable: false,
@@ -45,11 +40,6 @@ class RouteEditableCell extends React.Component {
     handleChange = (e) => {
         const value = e.target.value;
         this.setState({value});
-    };
-    handleChangeDate = (time, timeString) => {
-        if (this.props.onChange) {
-            this.props.onChange(timeString, this.props.id);
-        }
     };
     check = () => {
         this.setState({editable: false});
@@ -63,10 +53,7 @@ class RouteEditableCell extends React.Component {
 
     render() {
         const {value, editable} = this.state;
-        if (this.props.id === 'flightTime') {
-            return <TimePicker defaultValue={moment(this.props.time.flightTime, 'HH:mm:ss')}
-                               onChange={this.handleChangeDate}/>;
-        } else return (<div className="editable-cell">
+        return (<div className="editable-cell">
             {
                 editable ?
                     <div className="editable-cell-input-wrapper">
@@ -95,31 +82,24 @@ class RouteEditableCell extends React.Component {
     }
 }
 
-class RouteTable extends React.Component {
+class AirlineTable extends React.Component {
+    iterable = 0;
     span(product) {
         return {
             key: product.id,
-            routeTo: product.routeTo,
-            routeFrom: product.routeFrom,
-            flightTime: product.flightTime,
+            name: product.name
         };
     }
 
     rows = [];
     num = null;
-    keyArrRoute = new Set();
+    keyArr = new Set();
     onCellChange = (index, text, record) => {
         return (value, id) => {
-            this.keyArrRoute.add(record.key);
+            this.keyArr.add(record.key);
             var temp = this.props.products.get(record.key);
-            if (id === 'routeTo') {
-                temp.product.routeTo = value;
-            }
-            if (id === 'routeFrom') {
-                temp.product.routeFrom = value;
-            }
-            if (id === 'flightTime') {
-                temp.product.flightTime = value;
+            if (id === 'name') {
+                temp.product.name = value;
             }
             this.props.products.set(record.key, temp);
             this.forceUpdate();
@@ -129,53 +109,60 @@ class RouteTable extends React.Component {
     onDelete = (index, record) => {
         this.props.products.delete(record.key);
         $.ajax({
-            url: 'http://localhost:8080///deleteRouteById',
+            url: 'http://localhost:8080///deleteAirlineById',
             type: 'POST',
             data: 'id=' + record.key,
             dataType: 'json',
             success: {
                 200: function () {
-                    console.log("200onDeleteOfRoute");
+                    console.log("200onDeleteOfAirline");
                 }
             }
         });
         this.forceUpdate();
     };
     handleAdd = () => {
+        this.iterable += 1;
         var max;
         for (let key of this.props.products.keys()) {
             max = key;
         }
         var k = (+max + 1);
         const product = {
-            id: k,
-            routeTo: 'Unknown',
-            routeFrom: 'Unknown',
-            flightTime: '00:00:00',
+            id:k,
+            name: 'Unknown' + (this.iterable)
         };
         var isNew = true;
         var arr = {product, isNew};
-        this.props.products.set(k, arr);
+        this.props.products.set(product.id, arr);
         this.forceUpdate();
     };
 
     onApply = (index, record) => {
-        this.keyArrRoute.delete(record.key);
+        this.keyArr.delete(record.key);
         var t = this;
         var apply = this.props.products.get(record.key);
         $.ajax({
+            url: 'http://localhost:8080//saveAirline',
             type: 'POST',
-            url: "http://localhost:8080//saveRoute",
-            data: "id=" + apply.product.id + "&routeFrom=" + apply.product.routeFrom +
-            "&routeTo=" + apply.product.routeTo + "&routeTime=" + apply.product.flightTime,
-            dataType: 'application/json',
-            success: function (city) {
+            data: 'id='+apply.product.id+'&name='+apply.product.name,
+            success: function (data) {
+                var product = apply.product;//JSON.parse(city.responseText);
+                var isNew = false;
+                var arr = {product, isNew};
+                t.props.products.set(record.key, arr);
+                t.forceUpdate();
+            },
+            dataType: 'json',
+            /*statusCode: {
+                200: function () {
                     var product = apply.product;//JSON.parse(city.responseText);
                     var isNew = false;
                     var arr = {product, isNew};
                     t.props.products.set(record.key, arr);
                     t.forceUpdate();
                 }
+            }*/
         });
     };
 
@@ -185,33 +172,13 @@ class RouteTable extends React.Component {
                 title: 'ID', dataIndex: 'key', key: 'key'
             },
             {
-                title: 'RouteFrom', dataIndex: 'routeFrom', key: 'routeFrom',
+                title: 'Airline Company Name', dataIndex: 'name', key: 'name',
                 render: (text, record, index) => (
-                    <RouteEditableCell
+                    <AirlineEditableCell
                         value={text}
-                        id="routeFrom"
-                        onChange={this.onCellChange(index, 'routeFrom', record)}
-                    />
-                )
-            },
-            {
-                title: 'RouteTo', dataIndex: 'routeTo', key: 'routeTo',
-                render: (text, record, index) => (
-                    <RouteEditableCell
-                        value={text}
-                        id="routeTo"
-                        onChange={this.onCellChange(index, 'routeTo', record)}
-                    />
-                )
-            },
-            {
-                title: 'Flight Time', dataIndex: 'flightTime', key: 'flightTime',
-                render: (text, record, index) => (
-                    <RouteEditableCell
-                        value={text}
-                        id="flightTime"
-                        time={record}
-                        onChange={this.onCellChange(index, 'flightTime', record)}
+                        id="name"
+                        rec={record}
+                        onChange={this.onCellChange(index, 'name', record)}
                     />
                 )
             },
@@ -220,7 +187,8 @@ class RouteTable extends React.Component {
                 dataIndex: 'operation',
                 render: (text, record, index) => {
                     return (
-                        this.props.products.size > 1 ? this.keyArrRoute.has(record.key) == false ?
+
+                        this.props.products.size > 0 ? this.keyArr.has(record.key) == false ?
                                 (
                                     <div>
                                         <Popconfirm title="Вы уверены?" onConfirm={() => this.onDelete(index, record)}>
@@ -243,8 +211,7 @@ class RouteTable extends React.Component {
         ];
         this.rows.splice(0, this.rows.length);
         this.props.products.forEach((value, key, product) => {
-            if ((value.product.routeTo.toLowerCase().indexOf(this.props.filterText.toLowerCase()) === -1 ||
-                (value.product.routeFrom.toLowerCase().indexOf(this.props.routeFrom.toLowerCase()) === -1))
+            if ((value.product.name.toLowerCase().indexOf(this.props.filterText.toLowerCase()) === -1)
                 && value.isNew == false) {
                 return;
             }
@@ -262,45 +229,35 @@ class RouteTable extends React.Component {
     }
 }
 
-var routeState = {
-    routeTo: '',
-    routeFrom: '',
-    check: false
+var airlineState = {
+    name: '',
 };
-function setRouteState(key, value) {
-    if (key === 'routeTo') {
-        routeState.routeTo = value;
-    }
-    if (key === 'routeFrom') {
-        routeState.routeFrom = value;
-    }
-    if (key === 'check') {
-        routeState.check = value;
+function setAirlineState(key, value) {
+    if (key === 'name') {
+        airlineState.name = value;
     }
 }
-var dataCity = [];
+var dataAirlineName = [];
 
-class RouteSearchBar extends React.Component {
+class BoardSearchBar extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
-        this.handleSelect2 = this.handleSelect2.bind(this);
     };
 
-    getCities(value, self, name) {
+    getCities(value, self) {
         $.ajax({
+            url: 'http://localhost:8080/getairlineNameContaining',
             type: 'POST',
-            url: "http://localhost:8080/getroute" + name + "Containing",
-            data: "name=" + value,
-            dataType: 'application/json',
-            success: function (city) {
-                    var dataJson = JSON.parse(city.responseText);
-                    for (var i = 0; i < dataJson.length; i++) {
-                        dataCity.push(<Option key={dataJson[i]}>{dataJson[i]}</Option>);
+            data: 'name=' + value,
+            success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        dataAirlineName.push(<Option key={data[i]}>{data[i]}</Option>);
                     }
                     self.forceUpdate();
-                    dataCity.splice(0, dataCity.length);
-                }
+                    dataAirlineName.splice(0, dataAirlineName.length);
+                },
+            dataType: 'json',
         });
     }
 
@@ -308,68 +265,24 @@ class RouteSearchBar extends React.Component {
         if (e == undefined) {
             e = '';
         }
-        dataCity.splice(0, dataCity.length);
-        setRouteState('routeTo', e);
+        dataAirlineName.splice(0, dataAirlineName.length);
+        setAirlineState('name', e);
         var self = this;
         if (e !== '') {
-            var name = 'To';
-            self.getCities(e, self, name);
+            self.getCities(e, self);
         }
         self.props.onUserInput(
-            routeState.routeTo,
-            routeState.routeFrom,
-            routeState.check
+            airlineState.name
         );
     }
-
-    handleSelect2(e) {
-        if (e == undefined) {
-            e = '';
-        }
-        dataCity.splice(0, dataCity.length);
-        setRouteState('routeFrom', e);
-        var self = this;
-        if (e !== '') {
-            var name = 'From';
-            self.getCities(e, self, name);
-        }
-        self.props.onUserInput(
-            routeState.routeTo,
-            routeState.routeFrom,
-            routeState.check
-        );
-    }
-
-    isCheck = (e) => {
-        setRouteState('check', e);
-        this.props.onUserInput(
-            routeState.routeTo,
-            routeState.routeFrom,
-            routeState.check
-        );
-    };
 
     render() {
         return (
             <form>
                 <Select
                     combobox
-                    value={this.props.routeFrom}
-                    placeholder="Откуда..."
-                    style={{width: 200}}
-                    defaultActiveFirstOption={false}
-                    showArrow={true}
-                    showSearch={true}
-                    allowClear={true}
-                    filterOption={false}
-                    onChange={this.handleSelect2}
-                >
-                    {dataCity}
-                </Select>
-                <Select
-                    combobox
                     value={this.props.filterText}
-                    placeholder="Куда..."
+                    placeholder="Название..."
                     style={{width: 200}}
                     defaultActiveFirstOption={false}
                     showArrow={true}
@@ -378,58 +291,43 @@ class RouteSearchBar extends React.Component {
                     filterOption={false}
                     onChange={this.handleSelect}
                 >
-                    {dataCity}
+                    {dataAirlineName}
                 </Select>
-                <Switch
-                    onChange={this.isCheck}
-                    checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="cross"/>}/>
-                {' '}
             </form>
         );
     }
 }
 
-class FilterableRouteTable extends React.Component {
+class FilterableAirlineTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            routeFrom: '',
-            filterText: '',
-            inStockOnly: false
+            filterText: ''
         };
-
         this.handleUserInput = this.handleUserInput.bind(this);
     }
-
-    handleUserInput(filterText, routeFrom, inStockOnly) {
+    handleUserInput(filterText) {
         this.setState({
-            filterText: filterText,
-            routeFrom: routeFrom,
-            inStockOnly: inStockOnly
+            filterText: filterText
         });
     }
-
     render() {
         return (
             <div>
-                <RouteSearchBar
+                <BoardSearchBar
                     filterText={this.state.filterText}
-                    routeFrom={this.state.routeFrom}
-                    inStockOnly={this.state.inStockOnly}
                     onUserInput={this.handleUserInput}
                 />
-                <RouteTable
+                <AirlineTable
                     products={this.props.products}
                     filterText={this.state.filterText}
-                    routeFrom={this.state.routeFrom}
-                    inStockOnly={this.state.inStockOnly}
                 />
             </div>
         );
     }
 }
-/*
- ReactDOM.render(
- <FilterableRouteTable products={map}/>,
+/* ReactDOM.render(
+ <FilterableAirlineTable products={airlineMap}/>,
  document.getElementById('root')
  );*/
+

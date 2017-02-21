@@ -389,6 +389,7 @@ class SearchBar extends React.Component {
 }
 
 class FilterableProductTable extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -409,6 +410,7 @@ class FilterableProductTable extends React.Component {
     }
 
     render() {
+        console.log("HELLO!!!");
         return (
             <div>
                 <SearchBar

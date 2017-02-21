@@ -80,9 +80,9 @@ public class RouteController {
     }
 
     @GetMapping("/getrouteFromContaining")
-    public Set<String> getrouteFromContaining(String city) {
+    public Set<String> getrouteFromContaining(String name) {
         List <Route> list;
-        list =  routeRepo.findByrouteFromContaining(city);
+        list =  routeRepo.findByrouteFromContaining(name);
         Set <String > set = new HashSet<>();
         for (Route r : list){
             set.add(r.getRouteFrom());
@@ -90,10 +90,10 @@ public class RouteController {
         return set;
     }
 
-    @GetMapping("/getrouteToContaining")
-    public Set<String> getrouteToContaining(String city) {
+    @PostMapping("/getrouteToContaining")
+    public Set<String> getrouteToContaining(String name) {
         List <Route> list;
-        list =  routeRepo.findByrouteToContaining(city);
+        list =  routeRepo.findByrouteToContaining(name);
         Set <String > set = new HashSet<>();
         for (Route r : list){
             set.add(r.getRouteTo());
@@ -101,7 +101,7 @@ public class RouteController {
         return set;
     }
 
-    @GetMapping("/deleteRouteById")
+    @PostMapping("/deleteRouteById")
     public String deleteRouteById(Integer id) throws NullValueOfArgumentException {
         if (id != null) {
             Route route = routeRepo.findOne(id);

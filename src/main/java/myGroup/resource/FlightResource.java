@@ -14,11 +14,12 @@ import java.sql.Timestamp;
  * Created by Rafael on 21.11.2016.
  */
 public class FlightResource {
-    private AirlineResource airline;
-    private RouteResource route;
+    private Integer id;
+    private String airlineName;
+    private Integer route;
     private Timestamp departureTime;
     private Timestamp arrivalTime;
-    private BoardResource board;
+    private String boardName;
     private Integer passengers;
 
     /*public FlightResource(String string) throws ParseException {
@@ -30,27 +31,36 @@ public class FlightResource {
     }*/
 
     public FlightResource(Flight flight) {
-        this.airline = new AirlineResource(flight.getAirline());
-        this.route = new RouteResource(flight.getRoute());
+        this.id = flight.getFlightId();
+        this.airlineName = flight.getAirline().getName();
+        this.route = flight.getRoute().getRouteId();
         this.departureTime = flight.getDepartureTime();
         this.arrivalTime = flight.getArrivalTime();
-        this.board = new BoardResource(flight.getBoard());
+        this.boardName = flight.getBoard().getBoardName();
         this.passengers = flight.getPassengers();
     }
 
-    public AirlineResource getAirline() {
-        return airline;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAirline(AirlineResource airline) {
-        this.airline = airline;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public RouteResource getRoute() {
+    public String getAirline() {
+        return airlineName;
+    }
+
+    public void setAirline(String airline) {
+        this.airlineName = airline;
+    }
+
+    public Integer getRoute() {
         return route;
     }
 
-    public void setRoute(RouteResource route) {
+    public void setRouteFrom(Integer route) {
         this.route = route;
     }
 
@@ -70,12 +80,12 @@ public class FlightResource {
         this.arrivalTime = arrivalTime;
     }
 
-    public BoardResource getBoard() {
-        return board;
+    public String getBoard() {
+        return boardName;
     }
 
-    public void setBoard(BoardResource board) {
-        this.board = board;
+    public void setBoard(String board) {
+        this.boardName = board;
     }
 
     public Integer getPassengers() {

@@ -7,10 +7,21 @@ import myGroup.entity.Airline;
  */
 public class AirlineResource {
 
+    private Integer id;
+
     private String name;
 
     public AirlineResource(Airline airline) {
+        this.id = airline.getId();
         this.name = airline.getName();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

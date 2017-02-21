@@ -51,16 +51,16 @@ table,th,td {
   opacity: 0.9;
   border: 50px;
   margin: auto;
-  -webkit-animation: myanim 2s;
-  -moz-animation: myanim 2s;
-  -o-animation: myanim 2s;
-  animation: myanim 2s;
+  -webkit-animation: myanim 1s;
+  -moz-animation: myanim 1s;
+  -o-animation: myanim 1s;
+  animation: myanim 1s;
 }
 span {
-  -webkit-animation: myanim 2s;
-  -moz-animation: myanim 2s;
-  -o-animation: myanim 2s;
-  animation: myanim 2s;
+  -webkit-animation: myanim 1s;
+  -moz-animation: myanim 1s;
+  -o-animation: myanim 1s;
+  animation: myanim 1s;
 }
 table {
   border-collapse: collapse;

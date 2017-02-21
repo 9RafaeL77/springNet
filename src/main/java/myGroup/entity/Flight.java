@@ -38,7 +38,7 @@ public class Flight {
     private Timestamp arrivalTime;
 
     @ManyToOne
-    @JoinColumn(name = "board_name")
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @Column (name = "passengers")

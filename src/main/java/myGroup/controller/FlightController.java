@@ -61,9 +61,11 @@ public class FlightController {
     @GetMapping("/getAllFlight")
     public List<FlightResource> findAll() {
         final List<Flight> flights = (List<Flight>) flightRepo.findAll();
+
         final List<FlightResource> flightResources = new ArrayList<>();
         for (Flight flight : flights) {
             flightResources.add(new FlightResource(flight));
+            System.out.println("AIR: " + flight.getAirline().getName());
         }
         return flightResources;
     }
@@ -75,8 +77,8 @@ public class FlightController {
     }*/
 
     @GetMapping("/saveFlight")
-    public FlightResource saveAirline(Integer id, Integer airlineId, Integer routeId,
-                                      String departureTime, String boardId, Integer passengers)
+    public FlightResource saveFlight(Integer id, Integer airlineId, Integer routeId,
+                                      String departureTime, Integer boardId, Integer passengers)
             throws NullValueOfArgumentException, ParseException {
         if (id != null) {
             Flight flight = flightRepo.findOne(id);
@@ -87,6 +89,7 @@ public class FlightController {
             Timestamp arrivalTime;
             if (airlineId != null) {
                 airline = airlineRepo.findOne(airlineId);
+
                 if (airline == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Airline");
             } else throw new NullValueOfArgumentException("Enter argument:", "Airline");
             if (routeId != null) {

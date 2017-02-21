@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rafael on 12.11.2016.
@@ -22,7 +24,7 @@ public class AirlineController {
     @Autowired
     private AirlineRepo airlineRepo;
 
-    @GetMapping("/getAirlineById")
+    @PostMapping("/getAirlineById")
     public ResponseEntity <AirlineResource> getAirlineById(Integer id, String name) throws NullValueOfArgumentException {
         if (id != null) {
             final Airline airline = airlineRepo.findOne(id);
@@ -80,11 +82,15 @@ public class AirlineController {
         }
     }
 
-    @GetMapping("/getAir")
-    public Airline getAirline(String name) throws NullValueOfArgumentException {
-        //final Airline airline = airlineRepo.findByName(name);
-        Airline airline = airlineRepo.findDistinctNameByName(name);
-        return airline;
+    @PostMapping("/getairlineNameContaining")
+    public Set<String> getairlineNameContaining(String name) {
+        List <Airline> list;
+        list =  airlineRepo.findBynameContaining(name);
+        Set <String > set = new HashSet<>();
+        for (Airline r : list){
+            set.add(r.getName());
+        }
+        return set;
     }
 
     @PostMapping("/deleteAirlineById")

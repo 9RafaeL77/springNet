@@ -117,7 +117,7 @@ public class FlightController {
                 flight = new Flight();
                 flight.setFlightId(id);
                 //flight.setAirline(new Gson().fromJson(airline, Airline.class));
-                flight.setAirline(airline);
+                flight.setAirline(airline); // начиная с этой строчки код в if и else ветке выглядит одинаковым => нужно вынести в приватный метод для уменьшения дублируемости кода - принцип DRY - Don't repeat yourself
                 System.out.println("AIR " + flight.getAirline().getName());
                 //flight.setRoute(new Gson().fromJson(route, Route.class));
                 flight.setRoute(route);

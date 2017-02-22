@@ -11,5 +11,5 @@ import java.util.List;
  */
 //@Service(value = "AirlineRepo") //как задать имя спринг бину через аннотации
 public interface AirlineRepo extends PagingAndSortingRepository<Airline, Integer> {
-    List<Airline> findBynameContaining(String airlineName);
+    List<Airline> findBynameContaining(String airlineName); //findByNameContaining
 }

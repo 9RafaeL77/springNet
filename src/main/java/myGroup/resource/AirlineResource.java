@@ -5,7 +5,7 @@ import myGroup.entity.Airline;
 /**
  * Created by Rafael on 21.11.2016.
  */
-public class AirlineResource {
+public class AirlineResource { //тоже DTO только между базой и приложением, поэтому тоже можно сделать final по аналогии entity.Airline
 
     private Integer id;
 

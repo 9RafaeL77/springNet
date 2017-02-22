@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<boardName>spring2</boardName>
+	<name>spring2</name> <!--странный тег может просто name?-->
 	<description>Demo project for Spring Boot</description>
 
 	<parent>

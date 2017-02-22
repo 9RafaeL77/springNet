@@ -165,9 +165,9 @@ class BoardTable extends React.Component {
             url: "http://localhost:8080//saveBoard",
             data: "boardId=" + apply.product.id + "&name=" +
             apply.product.name + "&capacity=" + apply.product.capacity +
-            "&economy=" + apply.product.economy + "&business=" + apply.product.business,
+            "&economy=" + apply.product.economy + "&business=" + apply.product.business, //почему передаете в виже строки, а не в виде json передаете
             dataType: 'json',
-            success: function () {
+            success: function () { //в некоторых $.ajax вы используете код 200, мне кажется более верным все это заменить на success как здесь и соответсвенно вместо 400\500 использоывать failed
                 var product = apply.product;//JSON.parse(city.responseText);
                 var isNew = false;
                 var arr = {product, isNew};

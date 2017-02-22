@@ -24,14 +24,29 @@ public class AirlineController {
     @Autowired
     private AirlineRepo airlineRepo;
 
+    //видимо  String name можно удалить
     @PostMapping("/getAirlineById")
     public ResponseEntity <AirlineResource> getAirlineById(Integer id, String name) throws NullValueOfArgumentException {
+        /*
         if (id != null) {
             final Airline airline = airlineRepo.findOne(id);
             if (airline != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(new AirlineResource(airline));
-            } else throw new NullValueOfArgumentException("Does not exist:", "id");
+            } else { //лучше всегда делать скобки {} - так легче дебажить в будущем
+                throw new NullValueOfArgumentException("Does not exist:", "id");
+            }
         } else throw new NullValueOfArgumentException("Enter argument:", "id");
+        */
+
+        //от лестницы (вложенных if) можно избавиться если написать так:
+        if (id != null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        final Airline airline = airlineRepo.findOne(id);
+        if (airline == null) {
+            throw new NullValueOfArgumentException("Does not exist:", "id");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new AirlineResource(airline));
     }
 
     /*@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -85,10 +100,11 @@ public class AirlineController {
     @PostMapping("/getairlineNameContaining")
     public Set<String> getairlineNameContaining(String name) {
         List <Airline> list;
-        list =  airlineRepo.findBynameContaining(name);
+        list =  airlineRepo.findBynameContaining(name); //можно совместить со строчкой выше
         Set <String > set = new HashSet<>();
         for (Airline r : list){
-            set.add(r.getName());
+            set.add(r.getName()); //крайне желательно называть имена оссмысленно, например r -> airline,
+                                    // list->airlines, set хотябы result, в большом проекте плохой найминг сразу даст о себе знать
         }
         return set;
     }

@@ -109,7 +109,7 @@ class AirlineTable extends React.Component {
     onDelete = (index, record) => {
         this.props.products.delete(record.key);
         $.ajax({
-            url: 'http://localhost:8080///deleteAirlineById',
+            url: 'http://localhost:8080///deleteAirlineById', //целых три /// куда же так много :)
             type: 'POST',
             data: 'id=' + record.key,
             dataType: 'json',
@@ -257,7 +257,7 @@ class BoardSearchBar extends React.Component {
                     self.forceUpdate();
                     dataAirlineName.splice(0, dataAirlineName.length);
                 },
-            dataType: 'json',
+            dataType: 'json', //обычно пишут application/json, проверь пожалуйста
         });
     }
 
@@ -268,7 +268,7 @@ class BoardSearchBar extends React.Component {
         dataAirlineName.splice(0, dataAirlineName.length);
         setAirlineState('name', e);
         var self = this;
-        if (e !== '') {
+        if (e !== '') { //знаете чем отличается === от == ?
             self.getCities(e, self);
         }
         self.props.onUserInput(

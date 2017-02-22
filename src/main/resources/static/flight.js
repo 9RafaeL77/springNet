@@ -16,10 +16,10 @@ const Option = Select.Option;
 let flightMap = new Map();
  function getFlight() {
  var request;
- if (window.XMLHttpRequest) {
+ if (window.XMLHttpRequest) { //отформатируйте код, а то лесенка пропала, например нажмите CTRL+ALT+L в идее
  request = new XMLHttpRequest();
  } else {
- request = new ActiveXObject("Microsoft.XMLHTTP");
+ request = new ActiveXObject("Microsoft.XMLHTTP"); //лучше использовать $.ajax на мой взгляд
  }
  request.open('GET', 'http://localhost:8080//getAllFlight', false);
  request.onreadystatechange = function () {
@@ -67,7 +67,7 @@ class FlightEditableCell extends React.Component {
             return <DatePicker
                 showTime
                 format="YYYY-MM-DD HH:mm:ss"
-                defaultValue={moment(this.props.time.flightTime, 'YYYY-MM-DD HH:mm:ss')}
+                defaultValue={moment(this.props.time.flightTime, 'YYYY-MM-DD HH:mm:ss')} //раз используется больше одного раза нужно задуматься о константе
                 placeholder="Select Time"
                 onChange={this.handleChangeDate}
             />;
@@ -184,7 +184,7 @@ class FlightTable extends React.Component {
             url: "http://localhost:8080//saveFlight",
             data: "id=" + apply.product.id + "&airlineId=" + apply.product.airline +
             "&routeId=" + apply.product.route + "&departureTime=" + apply.product.departureTime +
-            "&boardId=" + apply.product.boardId + "&passengers=" + apply.product.passengers,
+            "&boardId=" + apply.product.boardId + "&passengers=" + apply.product.passengers, //это уже было либо используете json либо хотя бы какой-нить хелмеперную функцию сделайте которая генерит строку
             dataType: 'application/json',
             success: function (city) {
                     var product = apply.product;//JSON.parse(city.responseText);

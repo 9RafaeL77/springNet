@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+//почистите код - удалите ненужные комменты во всех файлах и не исплользуемые методы
 
 //@Configuration
 @EnableWebSecurity

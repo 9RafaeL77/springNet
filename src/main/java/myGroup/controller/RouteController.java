@@ -79,7 +79,7 @@ public class RouteController {
         }else throw new NullValueOfArgumentException("Enter argument:", "id");
     }
 
-    @GetMapping("/getrouteFromContaining")
+    @GetMapping("/getrouteFromContaining") //найминг - нужно так getRouteFromContaining, старайтесь нейминг всегда делать правильно потом ошибки правописания очень тяжело исправлять, т.к. метод может быть public api
     public Set<String> getrouteFromContaining(String name) {
         List <Route> list;
         list =  routeRepo.findByrouteFromContaining(name);

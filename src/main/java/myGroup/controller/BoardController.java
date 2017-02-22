@@ -59,6 +59,7 @@ public class BoardController {
                 if (name != null){
                     board.setBoardName(name);
                 }else throw new NullValueOfArgumentException("Enter argument:","boardName");
+                //рекомендую все проверки входных параметров переместить вверх метода, а после проверок уже писать логику
                 if (capacity != null){
                     board.setCapacity(capacity);
                 }else throw new NullValueOfArgumentException("Enter argument:","capacity");

@@ -12,7 +12,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="airline")
-public class Airline implements Identifiable<Integer> {
+public class Airline implements Identifiable<Integer> { //это так нахываемый DTO класс - предназначенный только для переноса информации с клиента на сервер и обратно, обычно такие классы не расширяемы, поэтому рекомендую поставить модификатор final
 
     public Airline (){}
 

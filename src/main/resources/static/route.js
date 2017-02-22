@@ -322,7 +322,7 @@ class RouteSearchBar extends React.Component {
         );
     }
 
-    handleSelect2(e) {
+    handleSelect2(e) { //дать осознанное название
         if (e == undefined) {
             e = '';
         }

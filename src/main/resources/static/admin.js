@@ -13,7 +13,7 @@ function getResource(url, t, callback) {
     $.ajax({
         type: 'GET',
         contentType: 'text/plain',
-        url: "http://localhost:8080//" + url,
+        url: "http://localhost:8080//" + url, //удалить http://localhost:8080, проверь чтоб только одна / была в начале url
         dataType: 'application/json',
         statusCode: {
             200: function (data) {
@@ -24,7 +24,7 @@ function getResource(url, t, callback) {
                     resourceMap.set(product.id, arr);
                 });
                 callback(resourceMap)
-
+            //нужно сделать fallback для ошибок
             }
         }
     })

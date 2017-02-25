@@ -13,30 +13,6 @@ var DatePicker = antd.DatePicker;
 var moment = moment;
 const Option = Select.Option;
 
-let flightMap = new Map();
-function getFlight() {
-    var request;
-    if (window.XMLHttpRequest) {
-        request = new XMLHttpRequest();
-    } else {
-        request = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    request.open('GET', '/getAllFlight', false);
-    request.onreadystatechange = function () {
-        if ((request.readyState === 4) && (request.status === 200)) {
-            var dataJson = JSON.parse(request.responseText);
-        }
-        dataJson.forEach((product) => {
-            var isNew = false;
-            var arr = {product, isNew};
-            flightMap.set(product.id, arr);
-        })
-    };
-    request.send();
-}
-
-getFlight();
-
 class FlightEditableCell extends React.Component {
     state = {
         value: this.props.value,

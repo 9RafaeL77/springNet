@@ -5,7 +5,7 @@ import myGroup.entity.Airline;
 /**
  * Created by Rafael on 21.11.2016.
  */
-public class AirlineResource {
+final public class AirlineResource {
 
     private Integer id;
 
@@ -13,7 +13,7 @@ public class AirlineResource {
 
     public AirlineResource(Airline airline) {
         this.id = airline.getId();
-        this.name = airline.getName();
+        this.name = airline.getAirlineName();
     }
 
     public Integer getId() {

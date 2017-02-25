@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Flight")
 //@Repository("jdbcFlightDAO")
-public class Flight {
+final public class Flight {
 
     public Flight(){}
 

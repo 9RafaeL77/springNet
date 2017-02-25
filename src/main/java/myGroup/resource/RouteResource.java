@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * Created by Rafael on 21.11.2016.
  */
-public class RouteResource {
+final public class RouteResource {
     private Integer id;
     private String routeFrom;
     private String routeTo;

@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Users")
 //@Repository("jdbcUsersDAO")
-public class Users {
+final public class Users {
 
     public Users(){}
 

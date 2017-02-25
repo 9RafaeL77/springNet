@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name="Board")
 //@Repository("jdbcBoardDAO")
-public class Board {
+final public class Board {
 
     public Board(){}
 

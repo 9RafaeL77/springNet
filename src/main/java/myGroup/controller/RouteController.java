@@ -26,13 +26,15 @@ public class RouteController {
     private RouteRepo routeRepo;
 
     @GetMapping("/getRouteById")
-    public RouteResource getRouteById(Integer id) throws NullValueOfArgumentException {
-        if (id != null) {
-            final Route route = routeRepo.findOne(id);
-            if (route != null) {
-                return new RouteResource(route);
-            } else throw new NullValueOfArgumentException("Does not exist:", "id");
-        } else throw new NullValueOfArgumentException("Enter argument:", "id");
+    public RouteResource getRouteById(Integer id) {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        final Route route = routeRepo.findOne(id);
+        if (route == null) {
+            throw new NullValueOfArgumentException("Does not exist:", "id");
+        }
+        return new RouteResource(route);
     }
 
     @GetMapping("/getAllRoute")
@@ -45,70 +47,72 @@ public class RouteController {
         return routeResources;
     }
 
-    @GetMapping("/saveRoute")
-    public RouteResource saveRoute(Integer id, String routeFrom, String routeTo, Time  routeTime) throws NullValueOfArgumentException, ParseException {
-        Route route = null;
-        if (id != null) {
-            route = routeRepo.findOne(id);
-            System.out.println("ID1: " + id);
-            if (route == null) { //в базе нет поля с таким id
-                route = new Route();
-                route.setRouteId(id);
-                System.out.println("ID2: " + id);
-                if (routeFrom != null) {
-                    route.setRouteFrom(routeFrom);
-                } else throw new NullValueOfArgumentException("Enter argument:", "routeFrom");
-                if (routeTo != null) {
-                    route.setRouteTo(routeTo);
-                } else throw new NullValueOfArgumentException("Enter argument:", "routeTo");
-                if (routeTime != null) {
-                    route.setFlightTime(routeTime);
-                } else throw new NullValueOfArgumentException("Enter argument:", "routeTime");
-                routeRepo.save(route);
-                RouteResource routeResources = new RouteResource(route);
-                return routeResources;
-            } else {
-                System.out.println("ID3: " + id);
-                route.setRouteFrom(routeFrom);
-                route.setRouteTo(routeTo);
-                route.setFlightTime(routeTime);
-                routeRepo.save(route);
-                RouteResource routeResources = new RouteResource(route);
-                return routeResources;
+    @PostMapping("/saveRoute")
+    public RouteResource saveRoute(Integer id, String routeFrom, String routeTo, Time routeTime) throws ParseException {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        Route route = routeRepo.findOne(id);
+        if (route == null) {
+            if (routeFrom == null) {
+                throw new NullValueOfArgumentException("Enter argument:", "routeFrom");
             }
-        }else throw new NullValueOfArgumentException("Enter argument:", "id");
+            if (routeTo == null) {
+                throw new NullValueOfArgumentException("Enter argument:", "routeTo");
+            }
+            if (routeTime == null) {
+                throw new NullValueOfArgumentException("Enter argument:", "routeTime");
+            }
+            route = new Route();
+            route.setRouteId(id);
+            route.setRouteFrom(routeFrom);
+            route.setRouteTo(routeTo);
+            route.setFlightTime(routeTime);
+            routeRepo.save(route);
+            RouteResource routeResources = new RouteResource(route);
+            return routeResources;
+        } else {
+            route.setRouteFrom(routeFrom);
+            route.setRouteTo(routeTo);
+            route.setFlightTime(routeTime);
+            routeRepo.save(route);
+            RouteResource routeResources = new RouteResource(route);
+            return routeResources;
+        }
     }
 
-    @GetMapping("/getrouteFromContaining")
-    public Set<String> getrouteFromContaining(String name) {
-        List <Route> list;
-        list =  routeRepo.findByrouteFromContaining(name);
-        Set <String > set = new HashSet<>();
-        for (Route r : list){
+    @PostMapping("/getRouteFromContaining")
+    public Set<String> getRouteFromContaining(String name) {
+        List<Route> list;
+        list = routeRepo.findByRouteFromContaining(name);
+        Set<String> set = new HashSet<>();
+        for (Route r : list) {
             set.add(r.getRouteFrom());
         }
         return set;
     }
 
-    @PostMapping("/getrouteToContaining")
-    public Set<String> getrouteToContaining(String name) {
-        List <Route> list;
-        list =  routeRepo.findByrouteToContaining(name);
-        Set <String > set = new HashSet<>();
-        for (Route r : list){
+    @PostMapping("/getRouteToContaining")
+    public Set<String> getRouteToContaining(String name) {
+        List<Route> list;
+        list = routeRepo.findByRouteToContaining(name);
+        Set<String> set = new HashSet<>();
+        for (Route r : list) {
             set.add(r.getRouteTo());
         }
         return set;
     }
 
     @PostMapping("/deleteRouteById")
-    public String deleteRouteById(Integer id) throws NullValueOfArgumentException {
-        if (id != null) {
-            Route route = routeRepo.findOne(id);
-            if (route != null) {
-                routeRepo.delete(id);
-                return "Route with id: " + id + " deleted";
-            } else throw new NullValueOfArgumentException("Does not exist:", "id");
-        } else throw new NullValueOfArgumentException("Enter argument:", "id");
+    public String deleteRouteById(Integer id) {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        Route route = routeRepo.findOne(id);
+        if (route == null) {
+            throw new NullValueOfArgumentException("Does not exist:", "id");
+        }
+        routeRepo.delete(id);
+        return "Route with id: " + id + " deleted";
     }
 }

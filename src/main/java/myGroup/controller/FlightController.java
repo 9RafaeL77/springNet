@@ -1,7 +1,6 @@
 package myGroup.controller;
 
 
-import com.google.gson.Gson;
 import myGroup.interfaceRepo.AirlineRepo;
 import myGroup.interfaceRepo.BoardRepo;
 import myGroup.interfaceRepo.RouteRepo;
@@ -28,10 +27,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SimpleTimeZone;
-
-//import org.json.simple.parser.ParseException;
-
 /**
  * Created by Rafael on 20.11.2016.
  */
@@ -47,15 +42,16 @@ public class FlightController {
     private BoardRepo boardRepo;
 
     @GetMapping("/getFlightById")
-    public FlightResource getFlightById(Integer id, HttpServletRequest request) throws NullValueOfArgumentException { //throws ParseException { //принимает String
-        if (id != null) {
-            System.out.println(request.getLocalPort());
-            final Flight flight = flightRepo.findOne(id);
-            if (flight != null) {
-                FlightResource flightResource = new FlightResource(flight);
-                return flightResource;
-            } else throw new NullValueOfArgumentException("Does not exist:", "ID");
-        } else throw new NullValueOfArgumentException("Enter argument:", "ID");
+    public FlightResource getFlightById(Integer id, HttpServletRequest request) {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "ID");
+        }
+        final Flight flight = flightRepo.findOne(id);
+        if (flight == null) {
+            throw new NullValueOfArgumentException("Does not exist:", "ID");
+        }
+        FlightResource flightResource = new FlightResource(flight);
+        return flightResource;
     }
 
     @GetMapping("/getAllFlight")
@@ -65,7 +61,6 @@ public class FlightController {
         final List<FlightResource> flightResources = new ArrayList<>();
         for (Flight flight : flights) {
             flightResources.add(new FlightResource(flight));
-            System.out.println("AIR: " + flight.getAirline().getName());
         }
         return flightResources;
     }
@@ -76,96 +71,123 @@ public class FlightController {
 
     }*/
 
-    @GetMapping("/saveFlight")
+    @PostMapping("/saveFlight")
     public FlightResource saveFlight(Integer id, Integer airlineId, Integer routeId,
-                                      String departureTime, Integer boardId, Integer passengers)
-            throws NullValueOfArgumentException, ParseException {
-        if (id != null) {
-            Flight flight = flightRepo.findOne(id);
-            Airline airline;
-            Route route;
-            Board board;
-            Timestamp depTime;
-            Timestamp arrivalTime;
+                                     String departureTime, Integer boardId, Integer passengers) throws ParseException {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        Flight flight = flightRepo.findOne(id);
+        Airline airline;
+        Route route;
+        Board board;
+        Timestamp depTime;
+        Timestamp arrivalTime;
+        if (flight == null) {
+            flight = new Flight();
+            flight.setFlightId(id);
             if (airlineId != null) {
                 airline = airlineRepo.findOne(airlineId);
-
-                if (airline == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Airline");
-            } else throw new NullValueOfArgumentException("Enter argument:", "Airline");
+                if (airline == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Airline");
+                }
+                flight.setAirline(airline);
+            } else {
+                throw new NullValueOfArgumentException("Enter argument:", "Airline");
+            }
             if (routeId != null) {
                 route = routeRepo.findOne(routeId);
-                if (route == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Route");
-            } else throw new NullValueOfArgumentException("Enter argument:", "Route");
+                if (route == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Route");
+                }
+                flight.setRoute(route);
+            } else {
+                throw new NullValueOfArgumentException("Enter argument:", "Route");
+            }
             if (boardId != null) {
                 board = boardRepo.findOne(boardId);
-                if (board == null) throw new NullValueOfArgumentException("Uncorrected id for :", "Board");
-            } else throw new NullValueOfArgumentException("Enter argument:", "Board");
+                if (board == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Board");
+                }
+                flight.setBoard(board);
+            } else {
+                throw new NullValueOfArgumentException("Enter argument:", "Board");
+            }
             if (departureTime != null) {
-                LocalDateTime dep = LocalDateTime.of(new Date(new SimpleDateFormat("yyyy.MM.dd:HH:mm")
+                LocalDateTime dep = LocalDateTime.of(new Date(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                 .parse(departureTime).getTime())
                                 .toLocalDate(),
-                        new Time(new SimpleDateFormat("yyyy.MM.dd:HH:mm")
+                        new Time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                 .parse(departureTime).getTime()).toLocalTime());
                 depTime = Timestamp.valueOf(dep);
                 LocalTime flightTime = route.getFlightTime().toLocalTime();
                 arrivalTime = Timestamp.valueOf(depTime.toLocalDateTime().plusHours(flightTime.
                         getHour()).plusMinutes(flightTime.getMinute()));
-            } else throw new NullValueOfArgumentException("Enter argument:", "departureTime");
-            if (passengers == null) throw new NullValueOfArgumentException("Enter argument:", "passengers");
-            /*-------------------------------------------------------------------------------------------*/
-            if (flight == null) { //в базе нет поля с таким id
-                flight = new Flight();
-                flight.setFlightId(id);
-                //flight.setAirline(new Gson().fromJson(airline, Airline.class));
-                flight.setAirline(airline);
-                System.out.println("AIR " + flight.getAirline().getName());
-                //flight.setRoute(new Gson().fromJson(route, Route.class));
-                flight.setRoute(route);
-                System.out.println("ROUTE: " + flight.getRoute().getRouteFrom());
                 flight.setDepartureTime(depTime);
                 flight.setArrivalTime(arrivalTime);
-                flight.setPassengers(passengers);
-                //flight.setBoard(new Gson().fromJson(board, Board.class));
-                flight.setBoard(board);
-                flightRepo.save(flight);
-                return new FlightResource(flight);
             } else {
-                //flight.setAirline(new Gson().fromJson(airline, Airline.class));
+                throw new NullValueOfArgumentException("Enter argument:", "departureTime");
+            }
+            if (passengers == null) {
+                throw new NullValueOfArgumentException("Enter argument:", "passengers");
+            }
+            flight.setPassengers(passengers);
+            flightRepo.save(flight);
+            return new FlightResource(flight);
+            /*//////////////////////////////////////////////////////////////////////////////////////////////*/
+        } else {
+            if (airlineId != null) {
+                airline = airlineRepo.findOne(airlineId);
+                if (airline == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Airline");
+                }
                 flight.setAirline(airline);
-                System.out.println("AIR " + flight.getAirline().getName());
-                //flight.setRoute(new Gson().fromJson(route, Route.class));
+            }
+            if (routeId != null) {
+                route = routeRepo.findOne(routeId);
+                if (route == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Route");
+                }
                 flight.setRoute(route);
-                System.out.println("ROUTE: " + flight.getRoute().getRouteFrom());
+            }
+            if (boardId != null) {
+                board = boardRepo.findOne(boardId);
+                if (board == null) {
+                    throw new NullValueOfArgumentException("Uncorrected id for :", "Board");
+                }
+                flight.setBoard(board);
+            }
+            if (departureTime != null) {
+                LocalDateTime dep = LocalDateTime.of(new Date(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .parse(departureTime).getTime())
+                                .toLocalDate(),
+                        new Time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .parse(departureTime).getTime()).toLocalTime());
+                depTime = Timestamp.valueOf(dep);
+                LocalTime flightTime = flight.getRoute().getFlightTime().toLocalTime();
+                arrivalTime = Timestamp.valueOf(depTime.toLocalDateTime().plusHours(flightTime.
+                        getHour()).plusMinutes(flightTime.getMinute()));
                 flight.setDepartureTime(depTime);
                 flight.setArrivalTime(arrivalTime);
-                flight.setPassengers(passengers);
-                //flight.setBoard(new Gson().fromJson(board, Board.class));
-                flight.setBoard(board);
-                flightRepo.save(flight);
-                return new FlightResource(flight);
             }
-        } else throw new NullValueOfArgumentException("Enter argument:", "id");
-    }
-
-    @RequestMapping("/getDATE")
-    public String date(String date, String date2) {
-        //Date date1 = Date.valueOf(date);
-        //System.out.println("DATE:  "+date1.toString());
-        System.out.println(date);
-        System.out.println(Timestamp.valueOf(date));
-        System.out.println(Timestamp.valueOf(date2));
-
-        return "as";
+            if (passengers != null) {
+                flight.setPassengers(passengers);
+            }
+            flightRepo.save(flight);
+            return new FlightResource(flight);
+        }
     }
 
     @PostMapping("/deleteFlightById")
-    public String deleteFlightById(Integer id) throws NullValueOfArgumentException {
-        if (id != null) {
-            Flight flight = flightRepo.findOne(id);
-            if (flight != null) {
-                flightRepo.delete(id);
-                return "Flight with id: " + id + " deleted";
-            } else throw new NullValueOfArgumentException("Does not exist:", "id");
-        } else throw new NullValueOfArgumentException("Enter argument:", "id");
+    public String deleteFlightById(Integer id) {
+        if (id == null) {
+            throw new NullValueOfArgumentException("Enter argument:", "id");
+        }
+        Flight flight = flightRepo.findOne(id);
+        if (flight == null) {
+            throw new NullValueOfArgumentException("Does not exist:", "id");
+        }
+        flightRepo.delete(id);
+        return "Flight with id: " + id + " deleted";
     }
 }

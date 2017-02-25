@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table (name = "Route")
-public class Route {
+final public class Route {
 
     public Route(){}
 

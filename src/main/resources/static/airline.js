@@ -9,29 +9,6 @@ var Popconfirm = antd.Popconfirm;
 var Input = antd.Input;
 const Option = Select.Option;
 
- /*let airlineMap = new Map();
- function getAirline() {
- var request;
- if (window.XMLHttpRequest) {
- request = new XMLHttpRequest();
- } else {
- request = new ActiveXObject("Microsoft.XMLHTTP");
- }
- request.open('GET', 'http://localhost:8080//getAllAirline', false);
- request.onreadystatechange = function () {
- if ((request.readyState === 4) && (request.status === 200)) {
- var dataJson = JSON.parse(request.responseText);
- }
- dataJson.forEach((product) => {
- var isNew = false;
- var arr = {product,isNew};
- airlineMap.set(product.id, arr);
- })
- };
- request.send();
- }
- getAirline();*/
-
 class AirlineEditableCell extends React.Component {
     state = {
         value: this.props.value,
@@ -50,7 +27,6 @@ class AirlineEditableCell extends React.Component {
     edit = () => {
         this.setState({editable: true});
     };
-
     render() {
         const {value, editable} = this.state;
         return (<div className="editable-cell">
@@ -90,7 +66,6 @@ class AirlineTable extends React.Component {
             name: product.name
         };
     }
-
     rows = [];
     num = null;
     keyArr = new Set();
@@ -104,22 +79,23 @@ class AirlineTable extends React.Component {
             this.props.products.set(record.key, temp);
             this.forceUpdate();
         };
-
     };
     onDelete = (index, record) => {
-        this.props.products.delete(record.key);
+        var t = this;
         $.ajax({
-            url: 'http://localhost:8080///deleteAirlineById',
+            url: '/deleteAirlineById',
             type: 'POST',
-            data: 'id=' + record.key,
-            dataType: 'json',
-            success: {
-                200: function () {
-                    console.log("200onDeleteOfAirline");
-                }
+            data: {id: record.key},
+            dataType: 'text',
+            success: function (text) {
+                t.props.products.delete(record.key);
+                t.forceUpdate();
+                console.log(text);
+            },
+            error: function () {
+                alert("Сервер не отвечает. Проверьте работу сервера!");
             }
         });
-        this.forceUpdate();
     };
     handleAdd = () => {
         this.iterable += 1;
@@ -129,7 +105,7 @@ class AirlineTable extends React.Component {
         }
         var k = (+max + 1);
         const product = {
-            id:k,
+            id: k,
             name: 'Unknown' + (this.iterable)
         };
         var isNew = true;
@@ -137,32 +113,25 @@ class AirlineTable extends React.Component {
         this.props.products.set(product.id, arr);
         this.forceUpdate();
     };
-
     onApply = (index, record) => {
-        this.keyArr.delete(record.key);
         var t = this;
         var apply = this.props.products.get(record.key);
         $.ajax({
-            url: 'http://localhost:8080//saveAirline',
+            url: '/saveAirline',
             type: 'POST',
-            data: 'id='+apply.product.id+'&name='+apply.product.name,
-            success: function (data) {
-                var product = apply.product;//JSON.parse(city.responseText);
+            data: {id: apply.product.id, name: apply.product.name},
+            success: function () {
+                t.keyArr.delete(record.key);
+                var product = apply.product;
                 var isNew = false;
                 var arr = {product, isNew};
                 t.props.products.set(record.key, arr);
                 t.forceUpdate();
             },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
+            },
             dataType: 'json',
-            /*statusCode: {
-                200: function () {
-                    var product = apply.product;//JSON.parse(city.responseText);
-                    var isNew = false;
-                    var arr = {product, isNew};
-                    t.props.products.set(record.key, arr);
-                    t.forceUpdate();
-                }
-            }*/
         });
     };
 
@@ -187,7 +156,6 @@ class AirlineTable extends React.Component {
                 dataIndex: 'operation',
                 render: (text, record, index) => {
                     return (
-
                         this.props.products.size > 0 ? this.keyArr.has(record.key) == false ?
                                 (
                                     <div>
@@ -239,25 +207,29 @@ function setAirlineState(key, value) {
 }
 var dataAirlineName = [];
 
-class BoardSearchBar extends React.Component {
+class AirlineSearchBar extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
     };
 
-    getCities(value, self) {
+    getAirlineName(value, self) {
+        dataAirlineName.splice(0, dataAirlineName.length);
         $.ajax({
-            url: 'http://localhost:8080/getairlineNameContaining',
             type: 'POST',
-            data: 'name=' + value,
-            success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        dataAirlineName.push(<Option key={data[i]}>{data[i]}</Option>);
-                    }
-                    self.forceUpdate();
-                    dataAirlineName.splice(0, dataAirlineName.length);
-                },
+            url: '/getAirlineNameContaining',
+            data: {name: value},
             dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    dataAirlineName.push(<Option key={data[i]}>{data[i]}</Option>);
+                }
+                self.forceUpdate();
+
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
+            }
         });
     }
 
@@ -269,7 +241,7 @@ class BoardSearchBar extends React.Component {
         setAirlineState('name', e);
         var self = this;
         if (e !== '') {
-            self.getCities(e, self);
+            self.getAirlineName(e, self);
         }
         self.props.onUserInput(
             airlineState.name
@@ -306,15 +278,17 @@ class FilterableAirlineTable extends React.Component {
         };
         this.handleUserInput = this.handleUserInput.bind(this);
     }
+
     handleUserInput(filterText) {
         this.setState({
             filterText: filterText
         });
     }
+
     render() {
         return (
             <div>
-                <BoardSearchBar
+                <AirlineSearchBar
                     filterText={this.state.filterText}
                     onUserInput={this.handleUserInput}
                 />

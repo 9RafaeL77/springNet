@@ -12,17 +12,16 @@ import java.util.Set;
  */
 @Entity
 @Table(name="airline")
-public class Airline implements Identifiable<Integer> {
+final public class Airline implements Identifiable<Integer> {
 
     public Airline (){}
 
     @Column(name="company_id")
     @Id
-    @GeneratedValue
     private Integer idAirline;
 
-    @Column
-    private String name;
+    @Column(name="airline_name")
+    private String airlineName;
 
     @OneToMany(mappedBy = "airline")
     private Set<Flight> flights = new HashSet<>();
@@ -36,13 +35,13 @@ public class Airline implements Identifiable<Integer> {
         if(idAirline != null) this.idAirline = idAirline;
     }
 
-    public String getName() {
-        return name;
+    public String getAirlineName() {
+        return airlineName;
     }
 
-    public void setName(String name) {
-        if (name != null) {
-            this.name = name;
+    public void setAirlineName(String airlineName) {
+        if (airlineName != null) {
+            this.airlineName = airlineName;
         }
     }
 

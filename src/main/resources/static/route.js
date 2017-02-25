@@ -13,30 +13,6 @@ var TimePicker = antd.TimePicker;
 var moment = moment;
 const Option = Select.Option;
 
-/*let map = new Map();
- function getRoute() {
- var request;
- if (window.XMLHttpRequest) {
- request = new XMLHttpRequest();
- } else {
- request = new ActiveXObject("Microsoft.XMLHTTP");
- }
- request.open('GET', 'http://localhost:8080//getAllRoute', false);
- request.onreadystatechange = function () {
- if ((request.readyState === 4) && (request.status === 200)) {
- var dataJson = JSON.parse(request.responseText);
- }
- dataJson.forEach((product) => {
- var isNew = false;
- var arr = {product,isNew};
- map.set(product.id, arr);
- })
- };
- request.send();
- }
-
- getRoute();*/
-
 class RouteEditableCell extends React.Component {
     state = {
         value: this.props.value,
@@ -124,22 +100,24 @@ class RouteTable extends React.Component {
             this.props.products.set(record.key, temp);
             this.forceUpdate();
         };
-
     };
     onDelete = (index, record) => {
-        this.props.products.delete(record.key);
+        var t = this;
         $.ajax({
-            url: 'http://localhost:8080///deleteRouteById',
+            url: '/deleteRouteById',
             type: 'POST',
-            data: 'id=' + record.key,
-            dataType: 'json',
-            success: {
-                200: function () {
-                    console.log("200onDeleteOfRoute");
-                }
+            data: {id: record.key},
+            dataType: 'text',
+            success: function (data) {
+                t.props.products.delete(record.key);
+                t.forceUpdate();
+                console.log(data);
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
             }
         });
-        this.forceUpdate();
+
     };
     handleAdd = () => {
         var max;
@@ -160,22 +138,27 @@ class RouteTable extends React.Component {
     };
 
     onApply = (index, record) => {
-        this.keyArrRoute.delete(record.key);
         var t = this;
         var apply = this.props.products.get(record.key);
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080//saveRoute",
-            data: "id=" + apply.product.id + "&routeFrom=" + apply.product.routeFrom +
-            "&routeTo=" + apply.product.routeTo + "&routeTime=" + apply.product.flightTime,
-            dataType: 'application/json',
-            success: function (city) {
-                    var product = apply.product;//JSON.parse(city.responseText);
-                    var isNew = false;
-                    var arr = {product, isNew};
-                    t.props.products.set(record.key, arr);
-                    t.forceUpdate();
-                }
+            url: "/saveRoute",
+            data: {
+                id: apply.product.id, routeFrom: apply.product.routeFrom,
+                routeTo: apply.product.routeTo, routeTime: apply.product.flightTime
+            },
+            dataType: 'json',
+            success: function () {
+                t.keyArrRoute.delete(record.key);
+                var product = apply.product;
+                var isNew = false;
+                var arr = {product, isNew};
+                t.props.products.set(record.key, arr);
+                t.forceUpdate();
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
+            }
         });
     };
 
@@ -283,28 +266,31 @@ var dataCity = [];
 class RouteSearchBar extends React.Component {
     constructor(props) {
         super(props);
-        this.handleSelect = this.handleSelect.bind(this);
-        this.handleSelect2 = this.handleSelect2.bind(this);
+        this.handleSelectRouteTo = this.handleSelectRouteTo.bind(this);
+        this.handleSelectRouteFrom = this.handleSelectRouteFrom.bind(this);
     };
 
-    getCities(value, self, name) {
+    getRouteContain(value, self, name) {
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/getroute" + name + "Containing",
-            data: "name=" + value,
-            dataType: 'application/json',
+            url: "/getRoute" + name + "Containing",
+            data: {name: value},
+            dataType: 'json',
             success: function (city) {
-                    var dataJson = JSON.parse(city.responseText);
-                    for (var i = 0; i < dataJson.length; i++) {
-                        dataCity.push(<Option key={dataJson[i]}>{dataJson[i]}</Option>);
-                    }
-                    self.forceUpdate();
-                    dataCity.splice(0, dataCity.length);
+               // var dataJson = JSON.parse(city.responseText);
+                for (var i = 0; i < city.length; i++) {
+                    dataCity.push(<Option key={city[i]}>{city[i]}</Option>);
                 }
+                self.forceUpdate();
+                dataCity.splice(0, dataCity.length);
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
+            }
         });
     }
 
-    handleSelect(e) {
+    handleSelectRouteTo(e) {
         if (e == undefined) {
             e = '';
         }
@@ -313,7 +299,7 @@ class RouteSearchBar extends React.Component {
         var self = this;
         if (e !== '') {
             var name = 'To';
-            self.getCities(e, self, name);
+            self.getRouteContain(e, self, name);
         }
         self.props.onUserInput(
             routeState.routeTo,
@@ -322,7 +308,7 @@ class RouteSearchBar extends React.Component {
         );
     }
 
-    handleSelect2(e) {
+    handleSelectRouteFrom(e) {
         if (e == undefined) {
             e = '';
         }
@@ -331,7 +317,7 @@ class RouteSearchBar extends React.Component {
         var self = this;
         if (e !== '') {
             var name = 'From';
-            self.getCities(e, self, name);
+            self.getRouteContain(e, self, name);
         }
         self.props.onUserInput(
             routeState.routeTo,
@@ -362,7 +348,7 @@ class RouteSearchBar extends React.Component {
                     showSearch={true}
                     allowClear={true}
                     filterOption={false}
-                    onChange={this.handleSelect2}
+                    onChange={this.handleSelectRouteFrom}
                 >
                     {dataCity}
                 </Select>
@@ -376,7 +362,7 @@ class RouteSearchBar extends React.Component {
                     showSearch={true}
                     allowClear={true}
                     filterOption={false}
-                    onChange={this.handleSelect}
+                    onChange={this.handleSelectRouteTo}
                 >
                     {dataCity}
                 </Select>

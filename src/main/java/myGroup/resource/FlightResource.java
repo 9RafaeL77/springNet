@@ -15,11 +15,11 @@ import java.sql.Timestamp;
  */
 public class FlightResource {
     private Integer id;
-    private String airlineName;
-    private Integer route;
-    private Timestamp departureTime;
-    private Timestamp arrivalTime;
-    private String boardName;
+    private AirlineResource airlineName;
+    private RouteResource route;
+    private String departureTime;
+    private String arrivalTime;
+    private BoardResource boardName;
     private Integer passengers;
 
     /*public FlightResource(String string) throws ParseException {
@@ -32,11 +32,11 @@ public class FlightResource {
 
     public FlightResource(Flight flight) {
         this.id = flight.getFlightId();
-        this.airlineName = flight.getAirline().getName();
-        this.route = flight.getRoute().getRouteId();
-        this.departureTime = flight.getDepartureTime();
-        this.arrivalTime = flight.getArrivalTime();
-        this.boardName = flight.getBoard().getBoardName();
+        this.airlineName = new AirlineResource(flight.getAirline());
+        this.route = new RouteResource(flight.getRoute());
+        this.departureTime = flight.getDepartureTime().toString();
+        this.arrivalTime = flight.getArrivalTime().toString();
+        this.boardName = new BoardResource(flight.getBoard());
         this.passengers = flight.getPassengers();
     }
 
@@ -48,43 +48,43 @@ public class FlightResource {
         this.id = id;
     }
 
-    public String getAirline() {
+    public AirlineResource getAirline() {
         return airlineName;
     }
 
-    public void setAirline(String airline) {
+    public void setAirline(AirlineResource airline) {
         this.airlineName = airline;
     }
 
-    public Integer getRoute() {
+    public RouteResource getRoute() {
         return route;
     }
 
-    public void setRouteFrom(Integer route) {
+    public void setRouteFrom(RouteResource route) {
         this.route = route;
     }
 
-    public Timestamp getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Timestamp departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Timestamp getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Timestamp arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public String getBoard() {
+    public BoardResource getBoard() {
         return boardName;
     }
 
-    public void setBoard(String board) {
+    public void setBoard(BoardResource board) {
         this.boardName = board;
     }
 

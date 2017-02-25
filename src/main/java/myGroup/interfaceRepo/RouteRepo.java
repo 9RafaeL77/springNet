@@ -16,6 +16,6 @@ import java.util.Set;
  */
 //@Service(value = "AirlineRepo")
 public interface RouteRepo extends PagingAndSortingRepository<Route, Integer> {
-    List<Route> findByrouteFromContaining(String routeFrom);
-    List<Route> findByrouteToContaining(String routeTo);
+    List<Route> findByRouteFromContaining(String routeFrom);
+    List<Route> findByRouteToContaining(String routeTo);
 }

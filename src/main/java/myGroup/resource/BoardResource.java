@@ -5,7 +5,7 @@ import myGroup.entity.Board;
 /**
  * Created by Rafael on 21.11.2016.
  */
-public class BoardResource {
+final public class BoardResource {
     private Integer id;
     private String name;
     private Integer capacity;

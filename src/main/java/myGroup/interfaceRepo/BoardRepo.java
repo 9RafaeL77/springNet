@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Rafael on 20.11.2016.
  */
 public interface BoardRepo extends PagingAndSortingRepository<Board, Integer> {
-    List<Board> findByboardNameContaining(String boardName);
+    List<Board> findByBoardNameContaining(String boardName);
 }

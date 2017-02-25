@@ -5,7 +5,7 @@ import myGroup.entity.Users;
 /**
  * Created by Rafael on 21.11.2016.
  */
-public class UsersResource {
+final public class UsersResource {
     private String firstName;
     private String lastName;
     private Boolean admin;

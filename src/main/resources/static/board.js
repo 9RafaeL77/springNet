@@ -9,31 +9,6 @@ var Popconfirm = antd.Popconfirm;
 var Input = antd.Input;
 const Option = Select.Option;
 
-/*
- let map = new Map();
- function getBoard() {
- var request;
- if (window.XMLHttpRequest) {
- request = new XMLHttpRequest();
- } else {
- request = new ActiveXObject("Microsoft.XMLHTTP");
- }
- request.open('GET', 'http://localhost:8080//getAllBoard', false);
- request.onreadystatechange = function () {
- if ((request.readyState === 4) && (request.status === 200)) {
- var dataJson = JSON.parse(request.responseText);
- }
- dataJson.forEach((product) => {
- var isNew = false;
- var arr = {product,isNew};
- map.set(product.id, arr);
- })
- };
- request.send();
- }
- getBoard();
- */
-
 class BoardEditableCell extends React.Component {
     state = {
         value: this.props.value,
@@ -86,7 +61,6 @@ class BoardEditableCell extends React.Component {
 
 class BoardTable extends React.Component {
     iterable = 0;
-
     span(product) {
         return {
             key: product.id,
@@ -96,7 +70,6 @@ class BoardTable extends React.Component {
             business: product.business,
         };
     }
-
     rows = [];
     num = null;
     keyArr = new Set();
@@ -123,15 +96,19 @@ class BoardTable extends React.Component {
 
     };
     onDelete = (index, record) => {
-        this.props.products.delete(record.key);
         var t = this;
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080///deleteBoardById",
-            data: "boardId=" + record.key,
+            url: "/deleteBoardById",
+            data: {boardId: record.key},
+            dataType: 'text',
             success: function (data) {
-                console.log("200onDeleteOfBoard: ", data);
+                t.props.products.delete(record.key);
+                console.log(data);
                 t.forceUpdate();
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
             }
         });
 
@@ -157,22 +134,24 @@ class BoardTable extends React.Component {
     };
 
     onApply = (index, record) => {
-        this.keyArr.delete(record.key);
         var t = this;
         var apply = this.props.products.get(record.key);
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080//saveBoard",
-            data: "boardId=" + apply.product.id + "&name=" +
-            apply.product.name + "&capacity=" + apply.product.capacity +
-            "&economy=" + apply.product.economy + "&business=" + apply.product.business,
+            url: "/saveBoard",
+            data: {boardId: apply.product.id, name: apply.product.name, capacity: apply.product.capacity,
+                economy: apply.product.economy, business: apply.product.business},
             dataType: 'json',
             success: function () {
-                var product = apply.product;//JSON.parse(city.responseText);
+                t.keyArr.delete(record.key);
+                var product = apply.product;
                 var isNew = false;
                 var arr = {product, isNew};
                 t.props.products.set(record.key, arr);
                 t.forceUpdate();
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
             }
         });
     };
@@ -287,11 +266,11 @@ class BoardSearchBar extends React.Component {
         this.handleSelect = this.handleSelect.bind(this);
     };
 
-    getCities(value, self) {
+    getBoardName(value, self) {
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/getboardNameContaining",
-            data: "name=" + value,
+            url: "/getBoardNameContaining",
+            data: {name: value},
             dataType: 'json',
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
@@ -299,6 +278,9 @@ class BoardSearchBar extends React.Component {
                 }
                 self.forceUpdate();
                 dataBoardName.splice(0, dataBoardName.length);
+            },
+            error: function () {
+                alert("Ощибка сервера! Проверьте корректность запроса или работоспособность сервера");
             }
         });
     }
@@ -311,7 +293,7 @@ class BoardSearchBar extends React.Component {
         setBoardState('name', e);
         var self = this;
         if (e !== '') {
-            self.getCities(e, self);
+            self.getBoardName(e, self);
         }
         self.props.onUserInput(
             boardState.name

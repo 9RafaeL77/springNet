@@ -51,17 +51,17 @@ table,th,td {
   opacity: 0.9;
   border: 50px;
   margin: auto;
-  -webkit-animation: myanim 1s;
-  -moz-animation: myanim 1s;
-  -o-animation: myanim 1s;
-  animation: myanim 1s;
+  -webkit-animation: myanim 0.5s;
+  -moz-animation: myanim 0.5s;
+  -o-animation: myanim 0.5s;
+  animation: myanim 0.5s;
 }
-span {
-  -webkit-animation: myanim 1s;
-  -moz-animation: myanim 1s;
-  -o-animation: myanim 1s;
-  animation: myanim 1s;
-}
+/*span {
+  -webkit-animation: myanim 0.5s;
+  -moz-animation: myanim 0.5s;
+  -o-animation: myanim 0.5s;
+  animation: myanim 0.5s;
+}*/
 table {
   border-collapse: collapse;
   border-spacing: 0;

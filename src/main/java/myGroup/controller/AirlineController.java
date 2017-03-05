@@ -34,7 +34,6 @@ public class AirlineController {
             throw new NullValueOfArgumentException("Does not exist: ", "id");
         }
         return ResponseEntity.status(HttpStatus.OK).body(new AirlineResource(airline));
-
     }
 
     @GetMapping("/getAllAirline")

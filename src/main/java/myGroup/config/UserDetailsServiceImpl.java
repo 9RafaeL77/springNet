@@ -1,4 +1,4 @@
-package myGroup.service;
+package myGroup.config;
 
 import myGroup.entity.Users;
 import myGroup.interfaceRepo.UsersRepo;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -19,25 +20,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UsersRepo usersRepo;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-
-        /*Users user = null;
-        System.out.println("usersRepo  =" + usersRepo);
-        Iterable<Users> userses = usersRepo.findAll();
-
-        for(Users tempUser: userses) {
-            if (tempUser.getLogin().equals(login)) {
-                user = tempUser;
-            }
-        }*/
-
-        /*if (user == null)
-            throw new UsernameNotFoundException("User " + login + " doesn't exist!");*/
+        Users user = usersRepo.findByLogin(login);
 
         Set<GrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority("USER"));
+
+        roles.add(new SimpleGrantedAuthority("ROLE_USER"));
+        roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         return new org.springframework.security.core.userdetails
-                .User("1234", "1234", roles);
+                .User(user.getLogin(), user.getPassword(), roles);
     }
 }

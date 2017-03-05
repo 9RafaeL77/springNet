@@ -239,10 +239,8 @@ class FlightTable extends React.Component {
             type: 'POST',
             data: 'id=' + record.key,
             dataType: 'json',
-            success: {
-                200: function () {
+            success:  function () {
                     console.log("200onDeleteOfRoute");
-                }
             }
         });
         this.forceUpdate();
@@ -275,7 +273,7 @@ class FlightTable extends React.Component {
         $.ajax({
             type: 'POST',
             url: "/saveFlight",
-            data: {id:apply.product.id, airlineId : apply.product.airline.id, routeId: apply.product.route.id,
+            data: {id: apply.product.id, airlineId: apply.product.airline.id, routeId: apply.product.route.id,
                 departureTime: apply.product.departureTime, boardId: apply.product.board.id, passengers: apply.product.passengers},
             dataType: 'json',
             success: function () {

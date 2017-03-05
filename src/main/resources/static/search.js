@@ -134,7 +134,7 @@ class SearchBar extends React.Component {
         $.ajax({
             type: 'GET',
             contentType: 'text/plain',
-            url: "http://localhost:8080/getroute" + name + "Containing?city=" + value,
+            url: "http://localhost:8080/getRoute" + name + "Containing?city=" + value,
             dataType: 'application/json',
             statusCode: {
                 200: function (city) {

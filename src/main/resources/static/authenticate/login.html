@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/library/login.css">
+</head>
+<body>
+
+<section class="container">
+    <div class="login">
+        <h1>Войти в личный кабинет</h1>
+        <form action="/signin" method="post">
+            <p><input type="text" name='username' value="" placeholder="Логин или Email"></p>
+            <p><input type="password" name='password' value="" placeholder="Пароль"></p>
+            <p class="remember_me">
+                <label>
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    Запомнить меня
+                </label>
+            </p>
+            <p class="submit"><input type="submit" name="commit" value="Войти"></p>
+        </form>
+    </div>
+
+    <div class="login-help">
+        <a href="/login.html">Забыли пароль?</a> Восстановите его!
+    </div>
+    <div class="login-help">
+        <a href="/authenticate/form.html">Регистрация!</a>
+    </div>
+</section>
+</body>
+</html>
